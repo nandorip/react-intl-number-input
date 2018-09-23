@@ -6,8 +6,8 @@ import IntlNumberInput from '../src';
 const App = () => (
   <IntlNumberInput
     locale="pt-BR"
-    style="currency"
-    currency="BRL"
+    prefix="R$"
+    precision={2}
   />
 );
 render(<App />, document.getElementById("root"));
