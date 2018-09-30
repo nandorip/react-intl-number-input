@@ -26,6 +26,10 @@ class IntlNumberInput extends Component {
     })
   }
 
+  getMaskedValue() {
+    return this.state.maskedValue;
+  }
+
   formatNumber(value = 0) {
     const formattedNumber = new Intl.NumberFormat(this.props.locale, {
       style: 'decimal',
