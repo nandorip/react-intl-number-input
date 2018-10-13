@@ -31,11 +31,17 @@ class IntlNumberInput extends Component {
   }
 
   formatNumber(value = 0) {
+    let numberValue = value;
+    if (typeof numberValue === 'string')
+    {
+      numberValue = this.getNumberValue(numberValue);
+    }
+
     const formattedNumber = new Intl.NumberFormat(this.props.locale, {
       style: 'decimal',
       minimumFractionDigits: this.props.precision,
       maximumFractionDigits: this.props.precision,
-    }).format(value);
+    }).format(numberValue);
 
     return `${this.props.prefix}${formattedNumber}${this.props.suffix}`;
   };
@@ -100,7 +106,7 @@ IntlNumberInput.propTypes = {
   prefix: PropTypes.string.isRequired,
   suffix: PropTypes.string.isRequired,
   precision: PropTypes.number.isRequired,
-  value: PropTypes.number,
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
 }

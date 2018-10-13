@@ -57,7 +57,7 @@ render(<App />, document.getElementById("root"));
 
 | Name | Type | Default Value | Description |
 | --- | --- | :---: | --- |
-| value | number | 0 | Initial numeric value |
+| value | number or string | 0 | Initial numeric value |
 | locale | string | 'en-US' | BCP 47 language tag. Defines a language code and a country or region code.<br>[Intl Locale Identification](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#Locale_identification_and_negotiation) *e.g.* 'de-DE', 'pt-BR' and 'ja-JP' |
 | prefix | string | '' | String used as prefix for the masked value |
 | suffix | string  | '' | String used as suffix for the masked value |
