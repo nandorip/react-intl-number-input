@@ -7,15 +7,16 @@ class IntlNumberInput extends Component {
 
     this.state = {
       maskedValue: '0',
-    }
+      value: 0,
+    };
   }
 
   componentDidMount() {
-    this.setMaskedValue(this.props.value)
+    this.setMaskedValue(this.props.value);
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.value !== this.props.value) {
+    if (prevProps.value !== this.props.value) {
       this.setMaskedValue(this.props.value);
     }
   }
@@ -23,17 +24,30 @@ class IntlNumberInput extends Component {
   setMaskedValue(value = 0) {
     this.setState({
       maskedValue: this.formatNumber(value),
-    })
+    });
   }
 
   getMaskedValue() {
     return this.state.maskedValue;
   }
 
+  getValue() {
+    return this.state.value;
+  }
+
+  getPrecisionValue(precision) {
+    return Math.pow(10, precision);
+  }
+
+  getNumberValue(strValue) {
+    const numberValue = Number(strValue.replace(/[^0-9]/g, ''));
+
+    return numberValue / this.getPrecisionValue(this.props.precision);
+  }
+
   formatNumber(value = 0) {
     let numberValue = value;
-    if (typeof numberValue === 'string')
-    {
+    if (typeof numberValue === 'string') {
       numberValue = this.getNumberValue(numberValue);
     }
 
@@ -44,23 +58,11 @@ class IntlNumberInput extends Component {
     }).format(numberValue);
 
     return `${this.props.prefix}${formattedNumber}${this.props.suffix}`;
-  };
-
-  getPrecisionValue(precision) {
-    return Math.pow(10, precision);
-  }
-
-  getNumberValue(strValue) {
-    const numberValue = Number(strValue.replace(/[^0-9-]/g, ''));
-
-    return numberValue / this.getPrecisionValue(this.props.precision);
   }
 
   updateValues(event) {
     const value = this.getNumberValue(event.target.value);
     const maskedValue = this.formatNumber(value);
-    
-    this.setState({ maskedValue });
 
     return [value, maskedValue];
   }
@@ -70,33 +72,37 @@ class IntlNumberInput extends Component {
 
     const [value, maskedValue] = this.updateValues(event);
 
+    event.persist();
+
     if (this.props.onChange && maskedValue) {
-      this.props.onChange(event, value, maskedValue);
+      this.setState({ value, maskedValue }, () => {
+        this.props.onChange(event, value, maskedValue);
+      });
     }
   }
 
   customProps() {
-    const customProps = { ...this.props }
+    const customProps = { ...this.props };
 
-		delete customProps.locale
-    delete customProps.prefix
-    delete customProps.suffix
-    delete customProps.precision
-    delete customProps.autoFocus
-    delete customProps.value
-    delete customProps.onChange
+    delete customProps.locale;
+    delete customProps.prefix;
+    delete customProps.suffix;
+    delete customProps.precision;
+    delete customProps.autoFocus;
+    delete customProps.value;
+    delete customProps.onChange;
 
-    return customProps
+    return customProps;
   }
 
   render() {
     return (
-        <input
-            value={this.state.maskedValue}
-            disabled={this.props.disabled}
-            onChange={(e) => this.handleChange(e)}
-            {...this.customProps()}
-        />
+      <input
+        value={this.state.maskedValue}
+        disabled={this.props.disabled}
+        onChange={e => this.handleChange(e)}
+        {...this.customProps()}
+      />
     );
   }
 }
@@ -109,13 +115,13 @@ IntlNumberInput.propTypes = {
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
-}
+};
 
 IntlNumberInput.defaultProps = {
   locale:'en-US',
   prefix: '',
   suffix: '',
   precision: 2,
-}
+};
 
 export default IntlNumberInput;
