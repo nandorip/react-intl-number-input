@@ -55,6 +55,11 @@ class App extends React.Component {
           />
         </p>
         <p>
+          <IntlNumberInput value={this.state.value} onChange={this.handleChange}   >
+            {props => <CustomInput {...props} />}
+          </IntlNumberInput>
+        </p>
+        <p>
           value: {this.state.value}
         </p>
         <p>
@@ -63,6 +68,12 @@ class App extends React.Component {
       </div>
     );
   }
+}
+
+function CustomInput (props) {
+  return (
+    <input style={{ background: 'deepskyblue' }} {...props} />
+  )
 }
 
 render(<App />, document.getElementById("root"));
