@@ -63,6 +63,7 @@ render(<App />, document.getElementById("root"));
 | suffix | string  | '' | String used as suffix for the masked value |
 | precision | number | 2 | Number of fraction digits to use |
 | onChange | function | n/a | `(event, value, maskedValue) => {}`<br>Callback function to handle value changes |
+| children | function | n/a | `(props) => React.Element`<br>HOC to render a custom input |
 
 ## Examples
 
@@ -94,3 +95,13 @@ render(<App />, document.getElementById("root"));
       precision={2}
     />
 ```
+
+```javascript
+    <IntlNumberInput
+      onChange={handleChange}
+      value={value}
+    >
+      {props => <CustomInput {...props} />}
+    </IntlNumberInput>
+```
+`onChange` and `value` must be passed to `IntlNumberInput` and not the child component in order for the formatting to work

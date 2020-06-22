@@ -91,11 +91,22 @@ class IntlNumberInput extends Component {
     delete customProps.autoFocus;
     delete customProps.value;
     delete customProps.onChange;
+    delete customProps.children;
 
     return customProps;
   }
 
   render() {
+
+    if (this.props.children && typeof(this.props.children) === 'function'){
+      return this.props.children({
+        value: this.state.maskedValue,
+        disabled: this.props.disabled,
+        onChange: e => this.handleChange(e),
+        ...this.customProps(),
+      });
+    }
+
     return (
       <input
         value={this.state.maskedValue}
@@ -115,6 +126,7 @@ IntlNumberInput.propTypes = {
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
+  children: PropTypes.func,
 };
 
 IntlNumberInput.defaultProps = {
