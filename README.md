@@ -3,17 +3,38 @@ A React component for masked and formatted number input.
 
 [Demo](https://nandorip.github.io/react-intl-number-input/example/dist/)
 
+## Requirements
+
+- Node.js 18+ (recommended: latest LTS)
+- React / ReactDOM: `>=16.8.0 <20`
+
 ## Install
 
 ```
 npm install react-intl-number-input
 ```
 
+## Development
+
+```
+npm install
+npm start
+```
+
+Open `http://localhost:3001`.
+
+## Scripts
+
+- `npm start`: runs webpack dev server
+- `npm run build`: builds the demo bundle in `example/dist`
+- `npm run transpile`: transpiles library source from `src` to `dist`
+- `npm test`: runs unit tests with Jest
+- `npm run publish-demo`: builds and deploys demo to GitHub Pages
+
 ## Usage
 
 ```javascript
 import React from 'react'
-import { render } from 'react-dom';
 import IntlNumberInput from 'react-intl-number-input';
 
 class App extends React.Component {
@@ -50,7 +71,23 @@ class App extends React.Component {
   }
 }
 
-render(<App />, document.getElementById("root"));
+```
+
+React 18+:
+
+```javascript
+import { createRoot } from 'react-dom/client';
+
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);
+```
+
+React 16/17:
+
+```javascript
+import ReactDOM from 'react-dom';
+
+ReactDOM.render(<App />, document.getElementById("root"));
 ```
 
 ## Properties
