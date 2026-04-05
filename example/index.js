@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import IntlNumberInput from '../src';
 
 class App extends React.Component {
@@ -65,4 +65,6 @@ class App extends React.Component {
   }
 }
 
-render(<App />, document.getElementById("root"));
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+root.render(<App />);
