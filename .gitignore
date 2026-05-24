@@ -1,2 +1,3 @@
 node_modules
-dist
+/dist
+CODE_REVIEW.md

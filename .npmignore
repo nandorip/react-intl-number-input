@@ -3,3 +3,4 @@ example
 .babelrc
 .gitignore
 webpack.config.js
+CODE_REVIEW.md
