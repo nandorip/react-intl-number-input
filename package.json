@@ -1,13 +1,33 @@
 {
   "name": "react-intl-number-input",
-  "version": "0.5.1",
+  "version": "0.7.0",
   "description": "A React component for masked and formatted number input.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
   "scripts": {
     "test": "jest --runInBand",
     "start": "webpack serve --mode development",
-    "transpile": "babel src -d dist --copy-files --no-copy-ignored --ignore \"**/*.test.jsx\"",
-    "prepublishOnly": "npm run transpile",
+    "transpile": "babel src -d dist --extensions \".ts,.tsx\" --ignore \"**/*.test.ts\" --ignore \"**/*.test.tsx\"",
+    "build:types": "tsc --emitDeclarationOnly",
+    "prepublishOnly": "npm test && npm run transpile && npm run build:types",
     "build": "webpack --mode production",
     "deploy": "gh-pages -d example/dist",
     "publish-demo": "npm run build && npm run deploy"
@@ -25,7 +45,8 @@
     "money",
     "number",
     "intl",
-    "input"
+    "input",
+    "typescript"
   ],
   "author": "Fernando Pires Reherman <nandorip@live.com>",
   "license": "MIT",
@@ -34,35 +55,35 @@
   },
   "homepage": "https://github.com/nandorip/react-intl-number-input#readme",
   "peerDependencies": {
-    "react": ">=16.8.0 <20",
-    "react-dom": ">=16.8.0 <20"
-  },
-  "dependencies": {
-    "prop-types": "^15.8.1"
+    "react": ">=16.8.0 <20"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.2",
-    "@babel/core": "^7.27.4",
-    "@babel/plugin-transform-object-rest-spread": "^7.28.4",
-    "@babel/preset-env": "^7.29.5",
-    "@babel/preset-react": "^7.27.1",
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-object-rest-spread": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "babel-jest": "^30.2.0",
-    "babel-loader": "^10.0.0",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.17",
+    "babel-jest": "^30.4.1",
+    "babel-loader": "^10.1.1",
     "gh-pages": "^6.3.0",
-    "html-webpack-plugin": "^5.6.4",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "webpack": "^5.101.3",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.4"
+    "html-webpack-plugin": "^5.6.7",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "typescript": "^6.0.3",
+    "webpack": "^5.107.2",
+    "webpack-cli": "^7.0.3",
+    "webpack-dev-server": "^5.2.5"
   },
   "overrides": {
     "fast-uri": "^3.1.1",
     "follow-redirects": "^1.16.0",
+    "js-yaml": "^4.1.1",
     "uuid": "^11.1.1"
   }
 }
