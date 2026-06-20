@@ -122,6 +122,11 @@ The component also accepts standard `<input>` attributes such as `ref`, `onFocus
 ```
 
 ```javascript
+// maskedValue: 12.50% — type digits only; decimal is implied by precision
+<IntlNumberInput suffix="%" precision={2} />
+```
+
+```javascript
 // maskedValue: R$ 1.234.567,89
 <IntlNumberInput locale="pt-BR" prefix="R$ " precision={2} />
 ```

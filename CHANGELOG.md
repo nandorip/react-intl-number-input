@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-06-20
+
 ### Added
 
 - TypeScript source and published type declarations (`IntlNumberInputProps`)
@@ -17,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `onBlur` callback
 - `inputMode` prop
 - Prefix/suffix HTML sanitization
+- Redesigned interactive demo page with labeled examples and independent state
+- `CONTRIBUTING.md` and `CHANGELOG.md` documentation
 
 ### Changed
 
@@ -25,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `onBlur` now returns clamped numeric values consistent with `onChange`
 - Prefix/suffix sanitization is SSR-safe (no `document` access)
 - `peerDependencies` now require only `react` (not `react-dom`)
+- Split consumer and maintainer documentation (`README.md`, `CONTRIBUTING.md`)
 
 ### Fixed
 
@@ -44,5 +49,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [git history](https://github.com/nandorip/react-intl-number-input/commits/master) for changes prior to 0.6.0.
 
-[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/nandorip/react-intl-number-input/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/nandorip/react-intl-number-input/releases/tag/v0.6.0
