@@ -16,7 +16,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         use: "babel-loader",
         exclude: /node_modules/
       }
@@ -24,7 +24,7 @@ module.exports = {
   },
   plugins: [htmlWebpackPlugin],
   resolve: {
-    extensions: [".js", ".jsx"]
+    extensions: [".js", ".jsx", ".ts", ".tsx"]
   },
   devServer: {
     static: {
