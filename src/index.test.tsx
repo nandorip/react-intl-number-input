@@ -317,4 +317,275 @@ describe("IntlNumberInput", () => {
     fireEvent.click(screen.getAllByRole("button")[1]);
     expect(onChange.mock.calls[0][1]).toBe(11);
   });
+
+  test("increments by step with decimal precision", () => {
+    const onChange = jest.fn();
+    render(
+      <IntlNumberInput
+        value={12.34}
+        precision={2}
+        step={1}
+        showStepButtons
+        onChange={onChange}
+      />
+    );
+
+    fireEvent.click(screen.getAllByRole("button")[1]);
+    expect(onChange.mock.calls[0][1]).toBe(12.35);
+  });
+
+  describe("renderControls", () => {
+    test("renders custom controls when renderControls is provided", () => {
+      render(
+        <IntlNumberInput
+          value={100}
+          renderControls={({ value }) => (
+            <div data-testid="custom-controls">
+              <span>Value: {value}</span>
+            </div>
+          )}
+        />
+      );
+
+      expect(screen.getByTestId("custom-controls")).toBeInTheDocument();
+      expect(screen.getByText("Value: 100")).toBeInTheDocument();
+    });
+
+    test("renders input as sibling without wrapper element", () => {
+      const { container } = render(
+        <IntlNumberInput
+          value={100}
+          renderControls={() => <div data-testid="controls" />}
+        />
+      );
+
+      expect(container.querySelector("div")?.dataset.testid).toBe("controls");
+      expect(container.querySelector("input")).not.toBeNull();
+    });
+
+    test("renderControls takes precedence over showStepButtons", () => {
+      render(
+        <IntlNumberInput
+          value={100}
+          showStepButtons
+          renderControls={() => <div data-testid="custom-controls" />}
+        />
+      );
+
+      expect(screen.getByTestId("custom-controls")).toBeInTheDocument();
+      expect(screen.queryAllByRole("button")).toHaveLength(0);
+    });
+
+    test("increment callback increases value", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          precision={0}
+          renderControls={({ increment }) => (
+            <button onClick={() => increment()}>+</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange.mock.calls[0][1]).toBe(101);
+    });
+
+    test("decrement callback decreases value", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          precision={0}
+          renderControls={({ decrement }) => (
+            <button onClick={() => decrement()}>-</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange.mock.calls[0][1]).toBe(99);
+    });
+
+    test("setValue callback sets specific value", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          precision={0}
+          renderControls={({ setValue }) => (
+            <button onClick={() => setValue(50)}>Set 50</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange.mock.calls[0][1]).toBe(50);
+    });
+
+    test("increment with multiplier works", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          precision={0}
+          renderControls={({ increment }) => (
+            <button onClick={() => increment(10)}>+10</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange.mock.calls[0][1]).toBe(110);
+    });
+
+    test("decrement with multiplier works", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          precision={0}
+          renderControls={({ decrement }) => (
+            <button onClick={() => decrement(10)}>-10</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange.mock.calls[0][1]).toBe(90);
+    });
+
+    test("controls respect minValue and maxValue", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={1}
+          precision={0}
+          minValue={0}
+          maxValue={10}
+          renderControls={({ increment, decrement }) => (
+            <div>
+              <button onClick={() => decrement()}>-</button>
+              <button onClick={() => increment()}>+</button>
+            </div>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      const buttons = screen.getAllByRole("button");
+
+      fireEvent.click(buttons[0]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][1]).toBe(0);
+
+      fireEvent.click(buttons[1]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][1]).toBe(1);
+
+      fireEvent.click(buttons[1]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][1]).toBe(2);
+    });
+
+    test("controls have access to formattedValue", () => {
+      render(
+        <IntlNumberInput
+          value={1234.56}
+          renderControls={({ formattedValue }) => (
+            <div data-testid="formatted">{formattedValue}</div>
+          )}
+        />
+      );
+
+      expect(screen.getByTestId("formatted")).toHaveTextContent("1,234.56");
+    });
+
+    test("controls receive disabled state", () => {
+      render(
+        <IntlNumberInput
+          value={100}
+          disabled
+          renderControls={({ disabled: isDisabled }) => (
+            <div data-testid="disabled">Disabled: {String(isDisabled)}</div>
+          )}
+        />
+      );
+
+      expect(screen.getByTestId("disabled")).toHaveTextContent("Disabled: true");
+    });
+
+    test("controls do not change value when disabled", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          precision={0}
+          disabled
+          renderControls={({ increment }) => (
+            <button onClick={() => increment()}>+</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    test("controls receive step and precision values", () => {
+      render(
+        <IntlNumberInput
+          value={100}
+          precision={2}
+          step={5}
+          renderControls={({ step, precision }) => (
+            <div data-testid="params">
+              Step: {step}, Precision: {precision}
+            </div>
+          )}
+        />
+      );
+
+      expect(screen.getByTestId("params")).toHaveTextContent("Step: 5, Precision: 2");
+    });
+
+    test("controls receive effective min and max bounds", () => {
+      render(
+        <IntlNumberInput
+          value={50}
+          minValue={10}
+          maxValue={100}
+          renderControls={({ min, max }) => (
+            <div data-testid="bounds">
+              Min: {min}, Max: {max}
+            </div>
+          )}
+        />
+      );
+
+      expect(screen.getByTestId("bounds")).toHaveTextContent("Min: 10, Max: 100");
+    });
+
+    test("increment with decimal precision uses step correctly", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={12.34}
+          precision={2}
+          step={1}
+          renderControls={({ increment }) => (
+            <button onClick={() => increment()}>+</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange.mock.calls[0][1]).toBe(12.35);
+    });
+  });
 });

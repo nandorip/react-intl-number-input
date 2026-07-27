@@ -3,9 +3,23 @@ import React, {
   useMemo,
   useCallback,
   useEffect,
+  useRef,
   memo,
   forwardRef,
 } from 'react';
+
+export interface ControlsRenderProps {
+  increment: (multiplier?: number) => void;
+  decrement: (multiplier?: number) => void;
+  setValue: (value: number) => void;
+  value: number;
+  min?: number;
+  max?: number;
+  disabled: boolean;
+  step: number;
+  precision: number;
+  formattedValue: string;
+}
 
 type IntlNumberInputOwnProps = {
   locale?: string;
@@ -28,6 +42,7 @@ type IntlNumberInputOwnProps = {
     value: number,
     maskedValue: string
   ) => void;
+  renderControls?: (props: ControlsRenderProps) => React.ReactNode;
 };
 
 export type IntlNumberInputProps = IntlNumberInputOwnProps &
@@ -91,6 +106,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
       onChange,
       onBlur,
       disabled = false,
+      renderControls,
       ...inputProps
     },
     ref
@@ -176,11 +192,24 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
       return formatNumber(initial);
     }, [value, formatNumber]);
 
+    const getInitialNumericValue = useCallback(() => {
+      const initial = value !== undefined ? value : 0;
+      if (typeof initial === 'string') {
+        return getNumberValue(initial);
+      }
+      return initial;
+    }, [value, getNumberValue]);
+
     const [maskedValue, setMaskedValue] = useState<string>(getInitialValue);
+    const numericValueRef = useRef<number>(getInitialNumericValue());
 
     useEffect(() => {
-      setMaskedValue(formatNumber(value ?? 0));
-    }, [value, formatNumber]);
+      if (value === undefined) return;
+      const numericVal = typeof value === 'string' ? getNumberValue(value) : value;
+      const clamped = clampToBounds(numericVal, effectiveMin, effectiveMax);
+      setMaskedValue(formatNumber(clamped));
+      numericValueRef.current = clamped;
+    }, [value, formatNumber, getNumberValue, effectiveMin, effectiveMax]);
 
     const handleChange = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -194,6 +223,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
         const clampedValue = clampToBounds(newValue, effectiveMin, effectiveMax);
         const newMaskedValue = formatNumber(clampedValue);
         setMaskedValue(newMaskedValue);
+        numericValueRef.current = clampedValue;
 
         if (onChange) {
           onChange(event, clampedValue, newMaskedValue);
@@ -210,6 +240,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
         const formattedValue = formatNumber(clampedValue);
 
         setMaskedValue(formattedValue);
+        numericValueRef.current = clampedValue;
 
         if (onBlur) {
           onBlur(event, clampedValue, formattedValue);
@@ -219,11 +250,11 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
     );
 
     const handleStep = useCallback(
-      (delta: number) => {
+      (delta: number, multiplier: number = 1) => {
         if (disabled) return;
 
-        const currentValue = getNumberValue(maskedValue);
-        const stepValue = safeStep * Math.pow(10, safePrecision);
+        const currentValue = numericValueRef.current;
+        const stepValue = (safeStep / Math.pow(10, safePrecision)) * multiplier;
         const newValue = clampToBounds(
           currentValue + delta * stepValue,
           effectiveMin,
@@ -232,6 +263,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
         const newMaskedValue = formatNumber(newValue);
         setMaskedValue(newMaskedValue);
+        numericValueRef.current = newValue;
 
         const syntheticEvent = {
           target: {
@@ -248,8 +280,6 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
       },
       [
         disabled,
-        getNumberValue,
-        maskedValue,
         safeStep,
         safePrecision,
         effectiveMin,
@@ -259,6 +289,39 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
         inputProps.name,
         inputProps.id,
       ]
+    );
+
+    const increment = useCallback(
+      (multiplier: number = 1) => handleStep(1, multiplier),
+      [handleStep]
+    );
+
+    const decrement = useCallback(
+      (multiplier: number = 1) => handleStep(-1, multiplier),
+      [handleStep]
+    );
+
+    const setValue = useCallback(
+      (newValue: number) => {
+        const clampedValue = clampToBounds(newValue, effectiveMin, effectiveMax);
+        const newMaskedValue = formatNumber(clampedValue);
+        setMaskedValue(newMaskedValue);
+        numericValueRef.current = clampedValue;
+
+        const syntheticEvent = {
+          target: {
+            value: newMaskedValue,
+            name: inputProps.name || '',
+            id: inputProps.id || '',
+          },
+          preventDefault: () => {},
+        } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+        if (onChange) {
+          onChange(syntheticEvent, clampedValue, newMaskedValue);
+        }
+      },
+      [effectiveMin, effectiveMax, formatNumber, onChange, inputProps.name, inputProps.id]
     );
 
     const inputMode = useMemo(() => {
@@ -280,6 +343,28 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
         {...inputProps}
       />
     );
+
+    if (renderControls) {
+      const controlsProps: ControlsRenderProps = {
+        increment,
+        decrement,
+        setValue,
+        value: numericValueRef.current,
+        min: effectiveMin,
+        max: effectiveMax,
+        disabled,
+        step: safeStep,
+        precision: safePrecision,
+        formattedValue: maskedValue,
+      };
+
+      return (
+        <>
+          {inputElement}
+          {renderControls(controlsProps)}
+        </>
+      );
+    }
 
     if (!showStepButtons) {
       return inputElement;

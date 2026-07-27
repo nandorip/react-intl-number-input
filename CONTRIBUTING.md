@@ -4,8 +4,10 @@ Thank you for your interest in contributing to `react-intl-number-input`.
 
 ## Requirements
 
-- Node.js 18+ (recommended: latest LTS)
-- npm 9+
+- Node.js `^22.18.0` or `>=24.11.0` (recommended: current Active LTS)
+- npm 10+
+
+These versions are required by the Babel 8 toolchain used to build the library. Consumers of the published npm package are not constrained by this.
 
 ## Getting started
 
@@ -82,9 +84,9 @@ This generates:
 1. Update `CHANGELOG.md` with the new version and changes.
 2. Bump the version in `package.json` following [semver](https://semver.org/):
    ```bash
-   npm version patch   # 0.6.0 → 0.6.1
-   npm version minor   # 0.6.0 → 0.7.0
-   npm version major   # 0.6.0 → 1.0.0
+   npm version patch   # 0.7.0 → 0.7.1
+   npm version minor   # 0.7.0 → 0.8.0
+   npm version major   # 0.7.0 → 1.0.0
    ```
 3. Publish:
    ```bash

@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-07-27
+
+### Added
+
+- `renderControls` render prop with exported `ControlsRenderProps` for custom stepper UI (`increment`, `decrement`, `setValue`, bounds, and formatted value)
+
+### Changed
+
+- Step increments now use display units: `step={1}` with `precision={2}` adds `0.01` (previously added `100` to the numeric value)
+- `renderControls` renders the input and controls as siblings without an opinionated wrapper — layout is controlled by the consumer
+- When both `renderControls` and `showStepButtons` are set, `renderControls` takes precedence
+- Development toolchain upgraded: Babel 8, TypeScript 7, Webpack 5.108, webpack-cli 7.2, webpack-dev-server 6
+- Babel config updated for Babel 8 defaults (`modules: "commonjs"`, classic JSX runtime) so the published CJS build remains compatible with React 16.8+
+- Contributor Node.js requirement updated to `^22.18.0 || >=24.11.0` (Babel 8)
+
+### Fixed
+
+- Step buttons and custom controls now read the numeric value from an internal ref instead of re-parsing the masked string (fixes incorrect steps with prefix/suffix or locale formatting)
+- Controlled `value` prop updates now apply `minValue`/`maxValue` clamping before formatting
+- Resolved transitive security advisories in the dev dependency tree (`npm audit` clean)
+
 ## [0.7.0] - 2026-06-20
 
 ### Added
@@ -49,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [git history](https://github.com/nandorip/react-intl-number-input/commits/master) for changes prior to 0.6.0.
 
-[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/nandorip/react-intl-number-input/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/nandorip/react-intl-number-input/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/nandorip/react-intl-number-input/releases/tag/v0.6.0

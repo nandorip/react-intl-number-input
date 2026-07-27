@@ -42,7 +42,10 @@ function App() {
 ### TypeScript
 
 ```typescript
-import IntlNumberInput, { IntlNumberInputProps } from 'react-intl-number-input';
+import IntlNumberInput, {
+  IntlNumberInputProps,
+  ControlsRenderProps,
+} from 'react-intl-number-input';
 
 const props: IntlNumberInputProps = {
   locale: 'pt-BR',
@@ -85,8 +88,9 @@ ReactDOM.render(<App />, document.getElementById('root'));
 | autoFocus | `boolean` | — | Native input autofocus |
 | minValue | `number` | — | Minimum allowed value |
 | maxValue | `number` | — | Maximum allowed value |
-| showStepButtons | `boolean` | `false` | Renders +/- step buttons |
-| step | `number` | `1` | Step increment for buttons |
+| showStepButtons | `boolean` | `false` | Renders built-in +/- step buttons (ignored when `renderControls` is set) |
+| renderControls | `function` | — | `(props: ControlsRenderProps) => ReactNode` — custom stepper UI |
+| step | `number` | `1` | Step increment in display units (e.g. `1` with `precision={2}` adds `0.01`) |
 | inputMode | `'numeric'` \| `'decimal'` | auto | Overrides mobile keyboard mode |
 | className | `string` | — | Input CSS class |
 | style | `object` | — | Input inline styles |
@@ -144,6 +148,32 @@ The component also accepts standard `<input>` attributes such as `ref`, `onFocus
 />
 ```
 
+```javascript
+// Custom controls (layout is up to you — wrap in a parent div as needed)
+<div className="amount-field">
+  <IntlNumberInput
+    value={12.34}
+    precision={2}
+    step={1}
+    minValue={0}
+    maxValue={100}
+    onChange={(event, value) => console.log(value)}
+    renderControls={({ increment, decrement, setValue, value, formattedValue, min, max, disabled }) => (
+      <div className="amount-controls">
+        <button type="button" onClick={() => decrement()} disabled={disabled}>-</button>
+        <span>{formattedValue}</span>
+        <button type="button" onClick={() => increment()} disabled={disabled}>+</button>
+        <button type="button" onClick={() => setValue(max ?? value)} disabled={disabled}>
+          Max
+        </button>
+      </div>
+    )}
+  />
+</div>
+```
+
+`renderControls` replaces `showStepButtons` when both are provided. The component renders the `<input>` and your controls as siblings (no wrapper), so you control layout in the parent.
+
 ## How input works
 
 Users type digits; the component applies locale formatting and optional prefix/suffix. For `precision={2}`, typing `1234` becomes `12.34`. Negative values are supported when `-` is present in the input.
@@ -151,6 +181,8 @@ Users type digits; the component applies locale formatting and optional prefix/s
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, testing, and publishing instructions.
+
+Local development requires Node.js `^22.18.0` or `>=24.11.0` (Babel 8). The published package has no Node.js version constraint for consumers.
 
 ## Changelog
 

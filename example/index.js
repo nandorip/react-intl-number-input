@@ -87,6 +87,30 @@ const EXAMPLES = [
       showStepButtons: true,
     },
   },
+  {
+    title: 'Custom controls',
+    description: 'renderControls for your own stepper UI and layout.',
+    hint: 'Starts at 12.34, step 0.01, range 0–100',
+    initialValue: 12.34,
+    initialMasked: '12.34',
+    inputProps: {
+      minValue: 0,
+      maxValue: 100,
+      step: 1,
+      precision: 2,
+      renderControls: ({ increment, decrement, formattedValue, disabled }) => (
+        <div className="demo-controls">
+          <button type="button" onClick={() => decrement()} disabled={disabled}>
+            −
+          </button>
+          <span>{formattedValue}</span>
+          <button type="button" onClick={() => increment()} disabled={disabled}>
+            +
+          </button>
+        </div>
+      ),
+    },
+  },
 ];
 
 function App() {

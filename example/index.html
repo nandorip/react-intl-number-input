@@ -147,6 +147,39 @@
             cursor: not-allowed;
         }
 
+        .demo-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .demo-controls button {
+            padding: 0.35rem 0.65rem;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .demo-controls button:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .demo-controls button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .demo-controls span {
+            flex: 1;
+            font-size: 0.88rem;
+            color: var(--muted);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+
         .demo-output {
             margin-top: auto;
             padding-top: 0.65rem;

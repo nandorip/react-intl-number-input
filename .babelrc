@@ -1,10 +1,17 @@
 {
   "presets": [
-    "@babel/preset-env",
-    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "modules": "commonjs"
+      }
+    ],
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "classic"
+      }
+    ],
     "@babel/preset-typescript"
-  ],
-  "plugins": [
-    "@babel/plugin-transform-object-rest-spread"
   ]
 }
