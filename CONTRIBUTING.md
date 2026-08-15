@@ -4,10 +4,10 @@ Thank you for your interest in contributing to `react-intl-number-input`.
 
 ## Requirements
 
-- Node.js `^22.18.0` or `>=24.11.0` (recommended: current Active LTS)
+- Node.js 20+ (recommended: current Active LTS)
 - npm 10+
 
-These versions are required by the Babel 8 toolchain used to build the library. Consumers of the published npm package are not constrained by this.
+These versions are required to build and test the library. Consumers of the published npm package are not constrained by this.
 
 ## Getting started
 
@@ -19,7 +19,7 @@ npm install
 
 ## Local development
 
-Start the demo app with hot reload:
+Start the demo app with live rebuild:
 
 ```bash
 npm start
@@ -31,10 +31,9 @@ Open [http://localhost:3001](http://localhost:3001). The demo lives in `example/
 
 | Command | Description |
 | --- | --- |
-| `npm start` | Webpack dev server for the demo |
+| `npm start` | esbuild dev server for the demo |
 | `npm test` | Run unit tests with Jest |
-| `npm run transpile` | Transpile `src/` to CommonJS in `dist/` |
-| `npm run build:types` | Generate TypeScript declarations in `dist/` |
+| `npm run build:lib` | Compile `src/` to CommonJS and types in `dist/` |
 | `npm run build` | Build the demo bundle in `example/dist` |
 | `npm run publish-demo` | Build and deploy the demo to GitHub Pages |
 
@@ -63,13 +62,12 @@ Tests live alongside the source in `src/index.test.tsx`.
 To produce the publishable artifacts locally:
 
 ```bash
-npm run transpile
-npm run build:types
+npm run build:lib
 ```
 
 This generates:
 
-- `dist/index.js` — CommonJS bundle (Babel)
+- `dist/index.js` — CommonJS build (`tsc`)
 - `dist/index.d.ts` — TypeScript declarations
 
 ## Publishing to npm
@@ -96,7 +94,7 @@ This generates:
 The `prepublishOnly` script runs automatically before publish:
 
 ```
-npm test → npm run transpile → npm run build:types
+npm test → npm run build:lib
 ```
 
 Do not commit `dist/` — it is built during publish and excluded via `.gitignore`.

@@ -4,6 +4,6 @@ module.exports = {
   moduleFileExtensions: ["js", "jsx", "ts", "tsx"],
   testMatch: ["**/*.test.tsx"],
   transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/jest-esbuild.cjs"
   }
 };

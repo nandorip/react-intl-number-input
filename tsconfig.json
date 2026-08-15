@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2018",
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "bundler",
-    "ignoreDeprecations": "6.0",
     "jsx": "react",
     "declaration": true,
-    "emitDeclarationOnly": true,
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,

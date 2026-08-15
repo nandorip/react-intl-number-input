@@ -1,5 +1,8 @@
 src
 example
-.babelrc
+scripts
 .gitignore
-webpack.config.js
+jest.config.cjs
+jest.setup.js
+jest-esbuild.cjs
+tsconfig.json

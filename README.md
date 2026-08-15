@@ -182,7 +182,7 @@ Users type digits; the component applies locale formatting and optional prefix/s
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, testing, and publishing instructions.
 
-Local development requires Node.js `^22.18.0` or `>=24.11.0` (Babel 8). The published package has no Node.js version constraint for consumers.
+Local development requires Node.js 20+. The published package has no Node.js version constraint for consumers.
 
 ## Changelog
 
