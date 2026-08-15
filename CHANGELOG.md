@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-08-15
+
+This is a maintainer/toolchain release. The published component API, peer dependency (`react >=16.8.0 <20`), and CommonJS entry are unchanged.
+
+### Security
+
+- Pinned transitive `js-yaml` to `4.3.1` ([GHSA-5p4m-2wfm-xmqj](https://github.com/advisories/GHSA-5p4m-2wfm-xmqj))
+
 ### Changed
 
 - Replaced the Babel + Webpack toolchain with TypeScript (`tsc`) for the library and esbuild for the demo
-- Dropped `fast-uri` override (it only existed for webpack-dev-server)
+- Dropped the `fast-uri` override (it only existed for webpack-dev-server)
+- Contributor Node.js requirement is now 20+ (no longer tied to Babel 8)
 
 ## [0.8.1] - 2026-08-13
 
@@ -82,7 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See [git history](https://github.com/nandorip/react-intl-number-input/commits/master) for changes prior to 0.6.0.
 
-[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/nandorip/react-intl-number-input/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/nandorip/react-intl-number-input/compare/v0.6.0...v0.7.0
