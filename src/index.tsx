@@ -52,7 +52,7 @@ export type IntlNumberInputProps = IntlNumberInputOwnProps &
   >;
 
 function sanitizeString(str: string): string {
-  return str.replace(/<[^>]*>/g, '');
+  return str.replace(/<[^>]*>/g, '').replace(/on\w+\s*=\s*["'][^"']*["']/g, '');
 }
 
 function resolveLocale(locale: string): string {
@@ -135,7 +135,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
     const getNumberValue = useCallback(
       (strValue: string): number => {
         const inputValue = String(strValue || '');
-        const hasNegativeSign = inputValue.includes('-');
+        const hasNegativeSign = inputValue.startsWith('-');
 
         const onlyDigits = inputValue.replace(/[^0-9]/g, '');
 
