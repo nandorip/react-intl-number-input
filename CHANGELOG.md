@@ -7,12 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.8.4] - 2026-09-03
+## [0.8.5] - 2026-09-03
 
 ### Fixed
 
 - Finalized demo and build scripts migration to TypeScript.
 - Corrected package entry points for better ESM compatibility.
+
+## [0.8.4] - 2026-09-03
+
+### Fixed
+
+- Attempted publish (version skipped due to registry timeout).
 
 ## [0.8.3] - 2026-09-03
 
