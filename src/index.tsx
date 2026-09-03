@@ -3,7 +3,9 @@ import React, {
   useMemo,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
+  useImperativeHandle,
   memo,
   forwardRef,
 } from 'react';
@@ -111,6 +113,9 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
     },
     ref
   ) {
+    const innerRef = useRef<HTMLInputElement>(null);
+    useImperativeHandle(ref, () => innerRef.current!);
+
     const safePrecision = useMemo(() => {
       if (typeof precision !== 'number' || Number.isNaN(precision)) return 2;
       return clamp(Math.round(precision), 0, 20);
@@ -202,6 +207,32 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
     const [maskedValue, setMaskedValue] = useState<string>(getInitialValue);
     const numericValueRef = useRef<number>(getInitialNumericValue());
+    const selectionRef = useRef<{ digitsBefore: number } | null>(null);
+
+    const useIsomorphicLayoutEffect =
+      typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+    useIsomorphicLayoutEffect(() => {
+      if (selectionRef.current && innerRef.current) {
+        const { digitsBefore } = selectionRef.current;
+        const newValue = innerRef.current.value;
+        let newPos = 0;
+        let digitsFound = 0;
+
+        for (let i = 0; i < newValue.length; i++) {
+          if (/\d/.test(newValue[i])) {
+            digitsFound++;
+          }
+          newPos = i + 1;
+          if (digitsFound >= digitsBefore) {
+            break;
+          }
+        }
+
+        innerRef.current.setSelectionRange(newPos, newPos);
+        selectionRef.current = null;
+      }
+    }, [maskedValue]);
 
     useEffect(() => {
       if (value === undefined) return;
@@ -213,6 +244,13 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
     const handleChange = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
+        const input = event.target;
+        const selectionStart = input.selectionStart || 0;
+        const valueBefore = input.value;
+        const digitsBefore = valueBefore.substring(0, selectionStart).replace(/\D/g, '').length;
+
+        selectionRef.current = { digitsBefore };
+
         const rawValue = event.target.value;
         const newValue = getNumberValue(rawValue);
 
@@ -271,7 +309,17 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
             name: inputProps.name || '',
             id: inputProps.id || '',
           },
+          currentTarget: {
+            value: newMaskedValue,
+            name: inputProps.name || '',
+            id: inputProps.id || '',
+          },
+          persist: () => {},
           preventDefault: () => {},
+          stopPropagation: () => {},
+          bubble: true,
+          cancelable: false,
+          type: 'change',
         } as unknown as React.ChangeEvent<HTMLInputElement>;
 
         if (onChange) {
@@ -314,7 +362,17 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
             name: inputProps.name || '',
             id: inputProps.id || '',
           },
+          currentTarget: {
+            value: newMaskedValue,
+            name: inputProps.name || '',
+            id: inputProps.id || '',
+          },
+          persist: () => {},
           preventDefault: () => {},
+          stopPropagation: () => {},
+          bubble: true,
+          cancelable: false,
+          type: 'change',
         } as unknown as React.ChangeEvent<HTMLInputElement>;
 
         if (onChange) {
@@ -333,8 +391,12 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
     const inputElement = (
       <input
-        ref={ref}
+        ref={innerRef}
         type="text"
+        role="spinbutton"
+        aria-valuenow={isValidNumber(numericValueRef.current) ? numericValueRef.current : 0}
+        aria-valuemin={effectiveMin}
+        aria-valuemax={effectiveMax}
         inputMode={inputMode}
         value={maskedValue}
         disabled={disabled}

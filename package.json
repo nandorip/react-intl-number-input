@@ -3,10 +3,12 @@
   "version": "0.8.3",
   "description": "A React component for masked and formatted number input.",
   "main": "dist/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
       "require": "./dist/index.js",
       "default": "./dist/index.js"
     }
@@ -14,15 +16,22 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
   ],
+  "engines": {
+    "node": ">=20"
+  },
   "sideEffects": false,
   "scripts": {
     "test": "jest --runInBand",
     "dev": "node scripts/demo.mjs",
     "start": "node scripts/demo.mjs",
-    "transpile": "tsc",
-    "build:lib": "tsc",
+    "transpile": "npm run build:lib",
+    "build:cjs": "tsc",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:lib": "npm run build:cjs && npm run build:esm && node -e \"require('fs').writeFileSync('dist/esm/package.json', '{\\\"type\\\": \\\"module\\\"}')\"",
     "prepublishOnly": "npm test && npm run build:lib",
     "build": "node scripts/demo.mjs --production",
     "deploy": "gh-pages -d example/dist",

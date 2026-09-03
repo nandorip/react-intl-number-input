@@ -41,19 +41,22 @@ function App() {
 
 ### TypeScript
 
-```typescript
+```tsx
+import React, { useState } from 'react';
 import IntlNumberInput, {
   IntlNumberInputProps,
-  ControlsRenderProps,
 } from 'react-intl-number-input';
 
-const props: IntlNumberInputProps = {
-  locale: 'pt-BR',
-  precision: 2,
-  onChange: (event, value, maskedValue) => {
-    console.log(value, maskedValue);
-  },
-};
+function App() {
+  const [value, setValue] = useState<number>(0);
+
+  const handleChange: IntlNumberInputProps['onChange'] = (event, val, masked) => {
+    setValue(val);
+    console.log('Numeric:', val, 'Masked:', masked);
+  };
+
+  return <IntlNumberInput value={value} onChange={handleChange} locale="pt-BR" />;
+}
 ```
 
 React 18+:
@@ -103,7 +106,17 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 The component also accepts standard `<input>` attributes such as `ref`, `onFocus`, `onKeyDown`, `aria-*`, `data-*`, and `autoComplete`. Custom `onChange` and `onBlur` callbacks receive the clamped numeric value and the formatted masked string.
 
+## Accessibility (a11y)
+
+The component is built with accessibility in mind:
+- Uses `role="spinbutton"` to identify as a numeric input.
+- Provides `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
+- Support for `forwardRef` allows linking labels and managing focus programmatically.
+- Built-in step buttons have descriptive `aria-label` attributes.
+
 ## Examples
+
+### Basic Usage
 
 ```javascript
 // maskedValue: 1,234,567.89
@@ -170,6 +183,26 @@ The component also accepts standard `<input>` attributes such as `ref`, `onFocus
     )}
   />
 </div>
+```
+
+### Programmatic Focus (ref)
+
+```javascript
+import React, { useRef } from 'react';
+import IntlNumberInput from 'react-intl-number-input';
+
+function FocusExample() {
+  const inputRef = useRef(null);
+
+  return (
+    <>
+      <IntlNumberInput ref={inputRef} />
+      <button onClick={() => inputRef.current?.focus()}>
+        Focus Input
+      </button>
+    </>
+  );
+}
 ```
 
 `renderControls` replaces `showStepButtons` when both are provided. The component renders the `<input>` and your controls as siblings (no wrapper), so you control layout in the parent.

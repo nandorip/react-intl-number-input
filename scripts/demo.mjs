@@ -11,13 +11,11 @@ mkdirSync(outdir, { recursive: true });
 copyFileSync(join(root, 'example', 'index.html'), join(outdir, 'index.html'));
 
 const options = {
-  entryPoints: [join(root, 'example', 'index.js')],
+  entryPoints: [join(root, 'example', 'index.tsx')],
   bundle: true,
   outfile: join(outdir, 'bundle.js'),
-  jsx: 'transform',
-  loader: { '.js': 'jsx' },
-  jsxFactory: 'React.createElement',
-  jsxFragment: 'React.Fragment',
+  jsx: 'automatic',
+  loader: { '.tsx': 'tsx' },
   minify: production,
   sourcemap: !production,
   logLevel: 'info',

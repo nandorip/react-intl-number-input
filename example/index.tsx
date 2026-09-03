@@ -1,12 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
-import IntlNumberInput from '../src';
+import IntlNumberInput, { IntlNumberInputProps } from '../src';
 
-function DemoCard({ title, description, hint, initialValue = 0, initialMasked, inputProps }) {
+interface DemoCardProps {
+  title: string;
+  description: string;
+  hint?: string;
+  initialValue?: number;
+  initialMasked?: string;
+  inputProps?: Partial<IntlNumberInputProps>;
+  renderExtra?: (ref: React.RefObject<HTMLInputElement | null>) => React.ReactNode;
+}
+
+function DemoCard({
+  title,
+  description,
+  hint,
+  initialValue = 0,
+  initialMasked,
+  inputProps,
+  renderExtra,
+}: DemoCardProps) {
   const [value, setValue] = useState(initialValue);
   const [maskedValue, setMaskedValue] = useState(initialMasked);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (event, nextValue, nextMaskedValue) => {
+  const handleChange = (
+    _event: React.ChangeEvent<HTMLInputElement>,
+    nextValue: number,
+    nextMaskedValue: string
+  ) => {
     setValue(nextValue);
     setMaskedValue(nextMaskedValue);
   };
@@ -17,11 +40,13 @@ function DemoCard({ title, description, hint, initialValue = 0, initialMasked, i
       <p>{description}</p>
       {hint ? <p>{hint}</p> : null}
       <IntlNumberInput
+        ref={inputRef}
         className="demo-input"
         value={value}
         onChange={handleChange}
         {...inputProps}
       />
+      {renderExtra ? renderExtra(inputRef) : null}
       <div className="demo-output">
         value
         <span>{value}</span>
@@ -32,7 +57,7 @@ function DemoCard({ title, description, hint, initialValue = 0, initialMasked, i
   );
 }
 
-const EXAMPLES = [
+const EXAMPLES: DemoCardProps[] = [
   {
     title: 'Default',
     description: 'Two decimal places with en-US formatting.',
@@ -98,7 +123,7 @@ const EXAMPLES = [
       maxValue: 100,
       step: 1,
       precision: 2,
-      renderControls: ({ increment, decrement, formattedValue, disabled }) => (
+      renderControls: ({ increment, decrement, formattedValue, disabled }: any) => (
         <div className="demo-controls">
           <button type="button" onClick={() => decrement()} disabled={disabled}>
             −
@@ -110,6 +135,24 @@ const EXAMPLES = [
         </div>
       ),
     },
+  },
+  {
+    title: 'Ref & Imperative API',
+    description: 'Use forwardRef to access the underlying input or focus it.',
+    hint: 'Click the button to focus the input programmatically.',
+    initialValue: 100,
+    initialMasked: '100.00',
+    inputProps: { id: 'ref-example' },
+    renderExtra: (inputRef: React.RefObject<HTMLInputElement | null>) => (
+      <button
+        type="button"
+        className="demo-button"
+        onClick={() => inputRef.current?.focus()}
+        style={{ marginTop: '8px', width: '100%' }}
+      >
+        Focus Input
+      </button>
+    ),
   },
 ];
 
@@ -174,5 +217,7 @@ function App() {
 }
 
 const rootElement = document.getElementById('root');
-const root = createRoot(rootElement);
-root.render(<App />);
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(<App />);
+}

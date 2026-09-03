@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-09-03
+
+### Added
+
+- Dual build support: the package now ships both CommonJS (`dist/index.js`) and ESM (`dist/esm/index.js`) versions.
+- Sourcemaps with inline sources included in the package for better debugging experience.
+- `CHANGELOG.md` and `CONTRIBUTING.md` are now included in the npm package.
+- `engines` field added to `package.json` specifying Node.js >= 20.
+- Proper accessibility support: the input now has `role="spinbutton"` and relevant `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
+- Full `forwardRef` support: `ref` now correctly points to the underlying `<input>` element and supports imperative methods via `useImperativeHandle`.
+- Demo and build scripts migrated to TypeScript and modern ES modules.
+
+### Changed
+
+- Improved cursor management: typing within the masked input now correctly preserves the cursor position instead of jumping to the end.
+- Enhanced synthetic events: `onChange` events triggered by step buttons or `setValue` now include more standard event properties (`currentTarget`, `persist`, etc.) for better compatibility.
+- Build process updated to use multiple `tsc` configurations for CJS and ESM.
+- `package.json` `exports` updated to support modern ESM resolution while maintaining CJS compatibility.
+
 ## [0.8.2] - 2026-08-15
 
 This is a maintainer/toolchain release. The published component API, peer dependency (`react >=16.8.0 <20`), and CommonJS entry are unchanged.

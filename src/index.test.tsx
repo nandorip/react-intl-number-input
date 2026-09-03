@@ -5,19 +5,19 @@ import IntlNumberInput from "./index";
 describe("IntlNumberInput", () => {
   test("renders default masked value", () => {
     render(<IntlNumberInput />);
-    expect(screen.getByRole("textbox")).toHaveValue("0.00");
+    expect(screen.getByRole("spinbutton")).toHaveValue("0.00");
   });
 
   test("formats initial value from props", () => {
     render(<IntlNumberInput value={1234.56} />);
-    expect(screen.getByRole("textbox")).toHaveValue("1,234.56");
+    expect(screen.getByRole("spinbutton")).toHaveValue("1,234.56");
   });
 
   test("calls onChange with numeric and masked values", () => {
     const onChange = jest.fn();
     render(<IntlNumberInput onChange={onChange} />);
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: "1234" } });
 
     expect(onChange).toHaveBeenCalledTimes(1);
@@ -27,7 +27,7 @@ describe("IntlNumberInput", () => {
 
   test("handles negative values", () => {
     render(<IntlNumberInput value={-100} precision={0} />);
-    expect(screen.getByRole("textbox")).toHaveValue("-100");
+    expect(screen.getByRole("spinbutton")).toHaveValue("-100");
   });
 
   test("respects minValue constraint", () => {
@@ -40,7 +40,7 @@ describe("IntlNumberInput", () => {
       />
     );
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: "5" } });
 
     const call = onChange.mock.calls[0];
@@ -58,7 +58,7 @@ describe("IntlNumberInput", () => {
       />
     );
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: "10100" } });
 
     const call = onChange.mock.calls[0];
@@ -67,7 +67,7 @@ describe("IntlNumberInput", () => {
 
   test("handles precision 0", () => {
     render(<IntlNumberInput value={1234} precision={0} />);
-    expect(screen.getByRole("textbox")).toHaveValue("1,234");
+    expect(screen.getByRole("spinbutton")).toHaveValue("1,234");
   });
 
   test("renders with prefix and suffix", () => {
@@ -79,12 +79,12 @@ describe("IntlNumberInput", () => {
         precision={2}
       />
     );
-    expect(screen.getByRole("textbox")).toHaveValue("$ 100.00 BRL");
+    expect(screen.getByRole("spinbutton")).toHaveValue("$ 100.00 BRL");
   });
 
   test("disables input when disabled prop is true", () => {
     render(<IntlNumberInput disabled />);
-    expect(screen.getByRole("textbox")).toBeDisabled();
+    expect(screen.getByRole("spinbutton")).toBeDisabled();
   });
 
   test("renders step buttons when showStepButtons is true", () => {
@@ -152,14 +152,14 @@ describe("IntlNumberInput", () => {
 
   test("handles pt-BR locale formatting", () => {
     render(<IntlNumberInput value={1234.56} locale="pt-BR" />);
-    expect(screen.getByRole("textbox")).toHaveValue("1.234,56");
+    expect(screen.getByRole("spinbutton")).toHaveValue("1.234,56");
   });
 
   test("calls onBlur with formatted value", () => {
     const onBlur = jest.fn();
     render(<IntlNumberInput onBlur={onBlur} />);
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: "1234" } });
     fireEvent.blur(input);
 
@@ -178,7 +178,7 @@ describe("IntlNumberInput", () => {
       />
     );
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.blur(input, { target: { value: "5" } });
 
     expect(onBlur.mock.calls[0][1]).toBe(10);
@@ -196,7 +196,7 @@ describe("IntlNumberInput", () => {
       />
     );
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.blur(input, { target: { value: "200" } });
 
     expect(onBlur.mock.calls[0][1]).toBe(100);
@@ -206,7 +206,7 @@ describe("IntlNumberInput", () => {
   test("reformats display value on blur", () => {
     render(<IntlNumberInput value={0} />);
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: "1234" } });
     fireEvent.blur(input);
 
@@ -215,12 +215,12 @@ describe("IntlNumberInput", () => {
 
   test("respects inputMode prop override", () => {
     render(<IntlNumberInput inputMode="numeric" precision={2} />);
-    expect(screen.getByRole("textbox")).toHaveAttribute("inputmode", "numeric");
+    expect(screen.getByRole("spinbutton")).toHaveAttribute("inputmode", "numeric");
   });
 
   test("falls back to en-US for invalid locale", () => {
     render(<IntlNumberInput value={1234.56} locale="invalid-locale" />);
-    expect(screen.getByRole("textbox")).toHaveValue("1,234.56");
+    expect(screen.getByRole("spinbutton")).toHaveValue("1,234.56");
   });
 
   test("sanitizes prefix and suffix", () => {
@@ -232,8 +232,8 @@ describe("IntlNumberInput", () => {
         precision={2}
       />
     );
-    expect(screen.getByRole("textbox")).toHaveValue('alert("x")100.00');
-    expect(screen.getByRole("textbox").value).not.toContain("<script>");
+    expect(screen.getByRole("spinbutton")).toHaveValue('alert("x")100.00');
+    expect(screen.getByRole("spinbutton").value).not.toContain("<script>");
   });
 
   test("renders input directly when step buttons are hidden", () => {
@@ -254,7 +254,7 @@ describe("IntlNumberInput", () => {
       />
     );
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: "200" } });
 
     expect(onChange.mock.calls[0][1]).toBe(100);
@@ -262,10 +262,10 @@ describe("IntlNumberInput", () => {
 
   test("updates display when controlled value prop changes", () => {
     const { rerender } = render(<IntlNumberInput value={10} precision={0} />);
-    expect(screen.getByRole("textbox")).toHaveValue("10");
+    expect(screen.getByRole("spinbutton")).toHaveValue("10");
 
     rerender(<IntlNumberInput value={25} precision={0} />);
-    expect(screen.getByRole("textbox")).toHaveValue("25");
+    expect(screen.getByRole("spinbutton")).toHaveValue("25");
   });
 
   test("forwards ref to the underlying input", () => {
@@ -286,7 +286,7 @@ describe("IntlNumberInput", () => {
       />
     );
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("spinbutton");
     expect(input).toHaveAttribute("aria-label", "Amount");
     expect(input).toHaveAttribute("autocomplete", "off");
 
@@ -589,3 +589,4 @@ describe("IntlNumberInput", () => {
     });
   });
 });
+

@@ -33,7 +33,7 @@ Open [http://localhost:3001](http://localhost:3001). The demo lives in `example/
 | --- | --- |
 | `npm start` | esbuild dev server for the demo |
 | `npm test` | Run unit tests with Jest |
-| `npm run build:lib` | Compile `src/` to CommonJS and types in `dist/` |
+| `npm run build:lib` | Compile `src/` to CommonJS, ESM, and types in `dist/` |
 | `npm run build` | Build the demo bundle in `example/dist` |
 | `npm run publish-demo` | Build and deploy the demo to GitHub Pages |
 
@@ -45,7 +45,7 @@ dist/          Published build output (generated, not committed)
 example/       Demo app and GitHub Pages bundle
 ```
 
-The npm package ships only `dist/`, `README.md`, and `LICENSE` (see `files` in `package.json`).
+The npm package ships `dist/`, `README.md`, `LICENSE`, `CHANGELOG.md`, and `CONTRIBUTING.md` (see `files` in `package.json`).
 
 ## Testing
 
@@ -68,6 +68,7 @@ npm run build:lib
 This generates:
 
 - `dist/index.js` — CommonJS build (`tsc`)
+- `dist/esm/index.js` — ESM build (`tsc`)
 - `dist/index.d.ts` — TypeScript declarations
 
 ## Publishing to npm
