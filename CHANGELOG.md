@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.6] - 2026-09-23
+
+This is a maintainer/toolchain release. The published component API is unchanged.
+
+### Security
+
+- Bumped transitive `js-yaml` override to `4.3.2` ([GHSA-2883-xcg3-v3hh](https://github.com/advisories/GHSA-2883-xcg3-v3hh))
+
+### Changed
+
+- Updated development dependencies: React `19.3.0`, Jest `30.5.2`, `@testing-library/react` `16.3.3`, `@types/react` `19.3.0`
+- Allowed install scripts for `esbuild` and `unrs-resolver` via `allowScripts`
+
 ## [0.8.5] - 2026-09-03
 
 ### Fixed

@@ -1,6 +1,6 @@
 {
   "name": "react-intl-number-input",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "A React component for masked and formatted number input.",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -64,17 +64,21 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/react": "^16.3.2",
-    "@types/react": "^19.2.18",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
     "esbuild": "^0.28.2",
     "gh-pages": "^6.3.0",
-    "jest": "^30.4.2",
-    "jest-environment-jsdom": "^30.4.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "typescript": "^7.0.2"
   },
   "overrides": {
-    "js-yaml": "4.3.1"
+    "js-yaml": "4.3.2"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "unrs-resolver": true
   }
 }
