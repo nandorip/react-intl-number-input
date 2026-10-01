@@ -228,6 +228,18 @@ describe("IntlNumberInput", () => {
     expect(screen.getByRole("spinbutton")).toHaveValue("1.234,56");
   });
 
+  test("parses Arabic-Indic digits for the selected locale", () => {
+    const onChange = jest.fn();
+    render(<IntlNumberInput locale="ar-EG" onChange={onChange} />);
+
+    fireEvent.change(screen.getByRole("spinbutton"), {
+      target: { value: "١٢٣٤" },
+    });
+
+    expect(onChange.mock.calls[0][1]).toBe(12.34);
+    expect(onChange.mock.calls[0][2]).toBe("١٢٫٣٤");
+  });
+
   test("calls onBlur with formatted value", () => {
     const onBlur = jest.fn();
     render(<IntlNumberInput onBlur={onBlur} />);

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initialize the internal numeric value within `minValue` and `maxValue` bounds so the displayed value, accessibility attributes, and custom controls agree on the first render.
 - Ignore digits in configured prefixes and suffixes when parsing edits.
+- Parse locale-specific digits such as Arabic-Indic numerals.
 - Prevent custom `setValue` controls from changing disabled inputs or accepting non-finite values.
 
 ### Added

@@ -129,6 +129,24 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
     const safePrefix = useMemo(() => sanitizeString(prefix), [prefix]);
     const safeSuffix = useMemo(() => sanitizeString(suffix), [suffix]);
+    const localizedDigitMap = useMemo(() => {
+      const formatter = new Intl.NumberFormat(resolveLocale(locale), {
+        useGrouping: false,
+        maximumFractionDigits: 0,
+      });
+      const map = new Map<string, string>();
+
+      for (let digit = 0; digit <= 9; digit++) {
+        const asciiDigit = String(digit);
+        const localizedDigit = formatter
+          .format(digit)
+          .match(/\p{Decimal_Number}/u)?.[0];
+        map.set(asciiDigit, asciiDigit);
+        if (localizedDigit) map.set(localizedDigit, asciiDigit);
+      }
+
+      return map;
+    }, [locale]);
 
     const [effectiveMin, effectiveMax] = useMemo(() => {
       if (minValue !== undefined && maxValue !== undefined && minValue > maxValue) {
@@ -154,7 +172,9 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
         const hasNegativeSign = /[-\u2212]/.test(inputValue);
 
-        const onlyDigits = inputValue.replace(/[^0-9]/g, '');
+        const onlyDigits = Array.from(inputValue)
+          .map((character) => localizedDigitMap.get(character) || '')
+          .join('');
 
         if (!onlyDigits) {
           return hasNegativeSign ? -0 : 0;
@@ -165,7 +185,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
         return hasNegativeSign ? -parsedValue : parsedValue;
       },
-      [getPrecisionValue, safePrecision, safePrefix, safeSuffix]
+      [getPrecisionValue, safePrecision, safePrefix, safeSuffix, localizedDigitMap]
     );
 
     const numberFormatter = useMemo(() => {
