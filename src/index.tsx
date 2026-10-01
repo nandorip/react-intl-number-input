@@ -107,6 +107,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
       inputMode: inputModeProp,
       onChange,
       onBlur,
+      onKeyDown: onKeyDownProp,
       disabled = false,
       renderControls,
       ...inputProps
@@ -122,9 +123,12 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
     }, [precision]);
 
     const safeStep = useMemo(() => {
-      if (typeof step !== 'number' || Number.isNaN(step) || step <= 0) return 1;
+      if (typeof step !== 'number' || !Number.isFinite(step) || step <= 0) return 1;
       return step;
     }, [step]);
+
+    const safePrefix = useMemo(() => sanitizeString(prefix), [prefix]);
+    const safeSuffix = useMemo(() => sanitizeString(suffix), [suffix]);
 
     const [effectiveMin, effectiveMax] = useMemo(() => {
       if (minValue !== undefined && maxValue !== undefined && minValue > maxValue) {
@@ -139,8 +143,16 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
     const getNumberValue = useCallback(
       (strValue: string): number => {
-        const inputValue = String(strValue || '');
-        const hasNegativeSign = inputValue.startsWith('-');
+        let inputValue = String(strValue || '');
+
+        if (safePrefix && inputValue.startsWith(safePrefix)) {
+          inputValue = inputValue.slice(safePrefix.length);
+        }
+        if (safeSuffix && inputValue.endsWith(safeSuffix)) {
+          inputValue = inputValue.slice(0, -safeSuffix.length);
+        }
+
+        const hasNegativeSign = /[-\u2212]/.test(inputValue);
 
         const onlyDigits = inputValue.replace(/[^0-9]/g, '');
 
@@ -153,7 +165,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
         return hasNegativeSign ? -parsedValue : parsedValue;
       },
-      [getPrecisionValue, safePrecision]
+      [getPrecisionValue, safePrecision, safePrefix, safeSuffix]
     );
 
     const numberFormatter = useMemo(() => {
@@ -184,12 +196,9 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
         numberValue = clampToBounds(numberValue, effectiveMin, effectiveMax);
 
         const formattedNumber = numberFormatter.format(numberValue);
-        const safePrefix = sanitizeString(prefix);
-        const safeSuffix = sanitizeString(suffix);
-
         return `${safePrefix}${formattedNumber}${safeSuffix}`;
       },
-      [getNumberValue, numberFormatter, prefix, suffix, effectiveMin, effectiveMax]
+      [getNumberValue, numberFormatter, safePrefix, safeSuffix, effectiveMin, effectiveMax]
     );
 
     const getInitialValue = useCallback(() => {
@@ -273,7 +282,10 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
     const handleBlur = useCallback(
       (event: React.FocusEvent<HTMLInputElement>) => {
         const rawValue = event.target.value;
-        const currentValue = getNumberValue(rawValue);
+        const parsedValue = getNumberValue(rawValue);
+        const currentValue = isValidNumber(parsedValue)
+          ? parsedValue
+          : numericValueRef.current;
         const clampedValue = clampToBounds(currentValue, effectiveMin, effectiveMax);
         const formattedValue = formatNumber(clampedValue);
 
@@ -298,6 +310,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
           effectiveMin,
           effectiveMax
         );
+        if (!isValidNumber(newValue)) return;
 
         const newMaskedValue = formatNumber(newValue);
         setMaskedValue(newMaskedValue);
@@ -349,8 +362,26 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
       [handleStep]
     );
 
+    const handleKeyDown = useCallback(
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
+        onKeyDownProp?.(event);
+        if (event.defaultPrevented || disabled || inputProps.readOnly) return;
+
+        if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          handleStep(1, event.shiftKey ? 10 : 1);
+        } else if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          handleStep(-1, event.shiftKey ? 10 : 1);
+        }
+      },
+      [onKeyDownProp, disabled, inputProps.readOnly, handleStep]
+    );
+
     const setValue = useCallback(
       (newValue: number) => {
+        if (disabled || !isValidNumber(newValue)) return;
+
         const clampedValue = clampToBounds(newValue, effectiveMin, effectiveMax);
         const newMaskedValue = formatNumber(clampedValue);
         setMaskedValue(newMaskedValue);
@@ -379,7 +410,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
           onChange(syntheticEvent, clampedValue, newMaskedValue);
         }
       },
-      [effectiveMin, effectiveMax, formatNumber, onChange, inputProps.name, inputProps.id]
+      [disabled, effectiveMin, effectiveMax, formatNumber, onChange, inputProps.name, inputProps.id]
     );
 
     const inputMode = useMemo(() => {
@@ -402,6 +433,7 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
         disabled={disabled}
         onChange={handleChange}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         {...inputProps}
       />
     );

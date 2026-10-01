@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Initialize the internal numeric value within `minValue` and `maxValue` bounds so the displayed value, accessibility attributes, and custom controls agree on the first render.
+- Ignore digits in configured prefixes and suffixes when parsing edits.
+- Prevent custom `setValue` controls from changing disabled inputs or accepting non-finite values.
+
+### Added
+
+- Keyboard stepping with Arrow Up and Arrow Down; hold Shift to adjust by ten steps.
 
 ## [0.8.6] - 2026-09-23
 

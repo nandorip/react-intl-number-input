@@ -25,6 +25,24 @@ describe("IntlNumberInput", () => {
     expect(onChange.mock.calls[0][2]).toBe("12.34");
   });
 
+  test("ignores digits in the prefix and suffix when parsing input", () => {
+    const onChange = jest.fn();
+    render(
+      <IntlNumberInput
+        prefix="V2 "
+        suffix=" x3"
+        onChange={onChange}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("spinbutton"), {
+      target: { value: "V2 1234 x3" },
+    });
+
+    expect(onChange.mock.calls[0][1]).toBe(12.34);
+    expect(onChange.mock.calls[0][2]).toBe("V2 12.34 x3");
+  });
+
   test("handles negative values", () => {
     render(<IntlNumberInput value={-100} precision={0} />);
     expect(screen.getByRole("spinbutton")).toHaveValue("-100");
@@ -139,6 +157,48 @@ describe("IntlNumberInput", () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange.mock.calls[0][1]).toBe(9);
+  });
+
+  test("supports ArrowUp and ArrowDown keyboard stepping", () => {
+    const onChange = jest.fn();
+    render(<IntlNumberInput precision={0} onChange={onChange} />);
+
+    const input = screen.getByRole("spinbutton");
+    fireEvent.keyDown(input, { key: "ArrowUp" });
+    expect(onChange.mock.calls[0][1]).toBe(1);
+    expect(input).toHaveValue("1");
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(onChange.mock.calls[1][1]).toBe(0);
+    expect(input).toHaveValue("0");
+  });
+
+  test("uses ten steps when Shift is held with an arrow key", () => {
+    const onChange = jest.fn();
+    render(<IntlNumberInput precision={0} onChange={onChange} />);
+
+    fireEvent.keyDown(screen.getByRole("spinbutton"), {
+      key: "ArrowUp",
+      shiftKey: true,
+    });
+
+    expect(onChange.mock.calls[0][1]).toBe(10);
+  });
+
+  test("lets onKeyDown prevent keyboard stepping", () => {
+    const onChange = jest.fn();
+    const onKeyDown = jest.fn((event) => event.preventDefault());
+    render(
+      <IntlNumberInput
+        precision={0}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+      />
+    );
+
+    fireEvent.keyDown(screen.getByRole("spinbutton"), { key: "ArrowUp" });
+    expect(onKeyDown).toHaveBeenCalledTimes(1);
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   test("clamps step button values to min/max", () => {
@@ -547,6 +607,41 @@ describe("IntlNumberInput", () => {
 
       fireEvent.click(screen.getByRole("button"));
       expect(onChange).not.toHaveBeenCalled();
+    });
+
+    test("setValue does not change a disabled control", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          disabled
+          renderControls={({ setValue }) => (
+            <button onClick={() => setValue(50)}>Set 50</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange).not.toHaveBeenCalled();
+      expect(screen.getByRole("spinbutton")).toHaveValue("100.00");
+    });
+
+    test("setValue ignores non-finite values", () => {
+      const onChange = jest.fn();
+      render(
+        <IntlNumberInput
+          value={100}
+          renderControls={({ setValue }) => (
+            <button onClick={() => setValue(Number.NaN)}>Set invalid</button>
+          )}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button"));
+      expect(onChange).not.toHaveBeenCalled();
+      expect(screen.getByRole("spinbutton")).toHaveValue("100.00");
     });
 
     test("controls receive step and precision values", () => {

@@ -111,6 +111,7 @@ The component also accepts standard `<input>` attributes such as `ref`, `onFocus
 The component is built with accessibility in mind:
 - Uses `role="spinbutton"` to identify as a numeric input.
 - Provides `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
+- Supports Arrow Up and Arrow Down to adjust by one step; Shift plus an arrow adjusts by ten steps. Your `onKeyDown` handler runs first and can prevent the adjustment.
 - Support for `forwardRef` allows linking labels and managing focus programmatically.
 - Built-in step buttons have descriptive `aria-label` attributes.
 
