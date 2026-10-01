@@ -47,6 +47,19 @@ describe("IntlNumberInput", () => {
     expect(call[1]).toBe(10);
   });
 
+  test("initializes the numeric value from the minimum bound", () => {
+    render(
+      <IntlNumberInput
+        minValue={10}
+        renderControls={({ value }) => <span>Current: {value}</span>}
+      />
+    );
+
+    expect(screen.getByRole("spinbutton")).toHaveValue("10.00");
+    expect(screen.getByRole("spinbutton")).toHaveAttribute("aria-valuenow", "10");
+    expect(screen.getByText("Current: 10")).toBeInTheDocument();
+  });
+
   test("respects maxValue constraint", () => {
     const onChange = jest.fn();
     render(

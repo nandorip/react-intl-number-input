@@ -199,11 +199,11 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
 
     const getInitialNumericValue = useCallback(() => {
       const initial = value !== undefined ? value : 0;
-      if (typeof initial === 'string') {
-        return getNumberValue(initial);
-      }
-      return initial;
-    }, [value, getNumberValue]);
+      const numericValue =
+        typeof initial === 'string' ? getNumberValue(initial) : initial;
+      const validValue = isValidNumber(numericValue) ? numericValue : 0;
+      return clampToBounds(validValue, effectiveMin, effectiveMax);
+    }, [value, getNumberValue, effectiveMin, effectiveMax]);
 
     const [maskedValue, setMaskedValue] = useState<string>(getInitialValue);
     const numericValueRef = useRef<number>(getInitialNumericValue());
