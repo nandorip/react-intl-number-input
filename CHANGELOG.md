@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.7] - 2026-10-01
+
+### Fixed
+
+- Initialize the internal numeric value within `minValue` and `maxValue` bounds so the displayed value, accessibility attributes, and custom controls agree on the first render.
+
 ## [0.8.6] - 2026-09-23
 
 This is a maintainer/toolchain release. The published component API is unchanged.
