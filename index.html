@@ -1,10 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>React Intl Number Input — Demo</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive demo of react-intl-number-input">
+    <title>React Intl Number Input Demo | Locale-Aware React Component</title>
+    <meta name="description" content="Try a React number input with locale-aware formatting, configurable precision, prefixes, suffixes, and value limits. See examples and install the package.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="theme-color" content="#f4f6f8">
+    <link rel="canonical" href="https://nandorip.github.io/react-intl-number-input/">
+    <link rel="sitemap" type="application/xml" href="https://nandorip.github.io/react-intl-number-input/sitemap.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="React Intl Number Input">
+    <meta property="og:title" content="React Intl Number Input Demo">
+    <meta property="og:description" content="An interactive demo of locale-aware number formatting, precision, prefixes, suffixes, and bounds in React.">
+    <meta property="og:url" content="https://nandorip.github.io/react-intl-number-input/">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="React Intl Number Input Demo">
+    <meta name="twitter:description" content="Try locale-aware number formatting and masked numeric inputs in React.">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareSourceCode",
+            "name": "react-intl-number-input",
+            "description": "A React component for masked and formatted number input with Intl.NumberFormat locale support.",
+            "url": "https://nandorip.github.io/react-intl-number-input/",
+            "codeRepository": "https://github.com/nandorip/react-intl-number-input",
+            "programmingLanguage": "TypeScript",
+            "runtimePlatform": "React",
+            "version": "0.8.7",
+            "license": "https://opensource.org/license/mit"
+        }
+    </script>
     <style>
         :root {
             color-scheme: light dark;
@@ -217,7 +244,19 @@
 </head>
 <body>
     <noscript>You need to enable JavaScript to run this demo.</noscript>
-    <div id="root"></div>
+    <div id="root">
+        <main class="demo">
+            <header class="demo-header">
+                <h1>React Intl Number Input</h1>
+                <p>A React number input with locale-aware formatting, adjustable precision, prefixes, suffixes, and min/max limits.</p>
+                <div class="demo-links">
+                    <a href="https://github.com/nandorip/react-intl-number-input">Source code</a>
+                    <a href="https://www.npmjs.com/package/react-intl-number-input">Install from npm</a>
+                </div>
+            </header>
+            <p class="demo-tip">The interactive examples are loading. The component formats numbers with <code>Intl.NumberFormat</code> and supports React 16.8 and newer.</p>
+        </main>
+    </div>
     <script src="./bundle.js"></script>
 </body>
 </html>
