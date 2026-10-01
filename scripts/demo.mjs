@@ -9,6 +9,7 @@ const production = process.argv.includes('--production');
 
 mkdirSync(outdir, { recursive: true });
 copyFileSync(join(root, 'example', 'index.html'), join(outdir, 'index.html'));
+copyFileSync(join(root, 'example', 'sitemap.xml'), join(outdir, 'sitemap.xml'));
 
 const options = {
   entryPoints: [join(root, 'example', 'index.tsx')],

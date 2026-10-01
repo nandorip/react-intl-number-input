@@ -2,7 +2,7 @@
 
 A React component for masked and formatted number input with `Intl.NumberFormat` locale support.
 
-[Demo](https://nandorip.github.io/react-intl-number-input/example/dist/)
+[Interactive demo](https://nandorip.github.io/react-intl-number-input/)
 
 ## Requirements
 
