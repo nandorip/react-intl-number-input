@@ -76,42 +76,58 @@ This generates:
 
 ## Publishing to npm
 
-### Prerequisites
+### Ownership & Accounts
 
-- npm account with publish access to `react-intl-number-input`
-- logged in: `npm login`
+The package is published under the npm account **`wipmob`** (`nandorip@live.com`).
 
-### Release checklist
+> **Tip (Co-Maintainer):** To allow publishing from the `nandorip` account as well, add it via npm CLI or web interface:
+> ```bash
+> npm owner add nandorip react-intl-number-input
+> ```
+> Or manage collaborators at [npmjs.com/package/react-intl-number-input/access](https://www.npmjs.com/package/react-intl-number-input/access).
 
-1. Run `npm run check` and `npm run build`, and review the resulting demo changes.
-2. Update `CHANGELOG.md` with the new version and changes.
-3. Bump the version in `package.json` following [semver](https://semver.org/), keeping `package-lock.json` and the demo's version metadata in sync:
+### Method 1: Automated Release via GitHub Actions (Recommended)
+
+This repository includes an automated workflow ([`.github/workflows/publish.yml`](.github/workflows/publish.yml)) with npm provenance attestations. This avoids local 2FA prompts and terminal issues.
+
+1. **One-time setup:**
+   - In your npm account (**`wipmob`**), generate an **Automation Token** or **Granular Access Token** with *Read and write* permissions for `react-intl-number-input`.
+   - In GitHub, go to **Settings > Secrets and variables > Actions** and add `NPM_TOKEN` with your token.
+2. **Publishing a release:**
+   - Create a new Release on GitHub (e.g. `v0.9.0`), or trigger the workflow manually under **Actions > Publish to npm > Run workflow**.
+   - GitHub Actions will run all checks, build, verify the tarball, and publish with `--provenance` automatically.
+
+### Method 2: Local CLI Release (`npm run release`)
+
+A release helper script is available to validate requirements, run the test suite, and publish:
+
+1. **Verify login:**
    ```bash
-   npm version patch   # 0.7.0 → 0.7.1
-   npm version minor   # 0.7.0 → 0.8.0
-   npm version major   # 0.7.0 → 1.0.0
+   npm whoami   # Should return 'wipmob' (or 'nandorip' if added as owner)
    ```
-4. Inspect `npm pack --dry-run` to confirm the published files.
-5. Publish:
+   If not logged in: `npm login`.
+2. **Bump version (if not already done):**
    ```bash
-   npm publish
+   npm version patch   # or minor / major
+   ```
+3. **Execute release:**
+   ```bash
+   npm run release
+   ```
+   If your account requires 2FA and you are in a non-interactive shell, pass the OTP directly:
+   ```bash
+   npm run release -- --otp=123456
    ```
 
-The `prepublishOnly` script runs automatically before publish:
-
-```
-npm run check
-```
-
-Do not commit `dist/` — it is built during publish and excluded via `.gitignore`.
-
-`prepack` also builds the library, so `npm pack` and installs from the repository cannot package stale build output. `check:package` packs with scripts disabled, installs the tarball offline in a temporary directory, checks CJS/ESM imports and TypeScript consumer fixtures, exercises SSR and browser DOM controls, then removes its temporary files.
-
-The compatible default preserves optimistic `value` editing, callback signatures, implied-decimal string parsing, scaled `step`, zero on clearing, affix sanitization and DOM layout. New strict controlled behavior is opt-in through `controlled`. Avoid changing these defaults in a maintenance release.
+The script automatically:
+- Confirms the active npm user.
+- Runs `npm run check` (Jest tests, TypeScript, library builds, tarball verification).
+- Runs `npm publish`.
+- Creates and pushes the git tag `v<version>`.
 
 ### Deploying the demo
 
-To update the live demo on GitHub Pages:
+To update the live demo on GitHub Pages independently:
 
 ```bash
 npm run publish-demo

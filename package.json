@@ -43,7 +43,8 @@
     "prepublishOnly": "npm run check",
     "build": "node scripts/demo.mjs --production",
     "deploy": "gh-pages -d example/dist",
-    "publish-demo": "npm run build && npm run deploy"
+    "publish-demo": "npm run build && npm run deploy",
+    "release": "node scripts/release.mjs"
   },
   "repository": {
     "type": "git",
