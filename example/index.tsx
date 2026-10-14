@@ -36,11 +36,13 @@ function DemoCard({
 
   return (
     <article className="demo-card">
-      <h2>{title}</h2>
+      <h2 id={`heading-${title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`}>{title}</h2>
       <p>{description}</p>
       {hint ? <p>{hint}</p> : null}
       <IntlNumberInput
         ref={inputRef}
+        controlled
+        aria-labelledby={`heading-${title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`}
         className="demo-input"
         value={value}
         onChange={handleChange}
@@ -77,7 +79,7 @@ const EXAMPLES: DemoCardProps[] = [
   {
     title: 'Currency prefix',
     description: 'Dollar prefix before the formatted number.',
-    hint: 'Type 1234567 → $1,234,567.00',
+    hint: 'Type 1234567 → $12,345.67',
     initialValue: 0,
     initialMasked: '$0.00',
     inputProps: { prefix: '$' },
@@ -123,13 +125,13 @@ const EXAMPLES: DemoCardProps[] = [
       maxValue: 100,
       step: 1,
       precision: 2,
-      renderControls: ({ increment, decrement, formattedValue, disabled }: any) => (
+      renderControls: ({ increment, decrement, formattedValue, disabled, readOnly }) => (
         <div className="demo-controls">
-          <button type="button" onClick={() => decrement()} disabled={disabled}>
+          <button type="button" aria-label="Decrease amount" onClick={() => decrement()} disabled={disabled || readOnly}>
             −
           </button>
           <span>{formattedValue}</span>
-          <button type="button" onClick={() => increment()} disabled={disabled}>
+          <button type="button" aria-label="Increase amount" onClick={() => increment()} disabled={disabled || readOnly}>
             +
           </button>
         </div>

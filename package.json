@@ -1,16 +1,20 @@
 {
   "name": "react-intl-number-input",
-  "version": "0.8.7",
+  "version": "0.9.0",
   "description": "A React component for masked and formatted number input.",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     }
   },
   "files": [
@@ -26,13 +30,17 @@
   "sideEffects": false,
   "scripts": {
     "test": "jest --runInBand",
+    "typecheck": "tsc -p tsconfig.check.json",
+    "check:package": "node scripts/check-package.mjs",
+    "check": "npm test && npm run typecheck && npm run build:lib && npm run check:package",
     "dev": "node scripts/demo.mjs",
     "start": "node scripts/demo.mjs",
     "transpile": "npm run build:lib",
     "build:cjs": "tsc",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:lib": "npm run build:cjs && npm run build:esm && node -e \"require('fs').writeFileSync('dist/esm/package.json', '{\\\"type\\\": \\\"module\\\"}')\"",
-    "prepublishOnly": "npm test && npm run build:lib",
+    "prepack": "npm run build:lib",
+    "prepublishOnly": "npm run check",
     "build": "node scripts/demo.mjs --production",
     "deploy": "gh-pages -d example/dist",
     "publish-demo": "npm run build && npm run deploy"
@@ -66,8 +74,9 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "esbuild": "^0.28.2",
-    "gh-pages": "^6.3.0",
+    "gh-pages": "6.1.1",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "react": "^19.3.0",

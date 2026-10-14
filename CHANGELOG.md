@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-13
+
+### Added
+
+- Opt-in `controlled` mode that keeps the parent's `value` authoritative when edits are rejected. The default preserves historical optimistic editing.
+- Optional `readOnly` information for custom controls and formatted `aria-valuetext`.
+- Regression tests, library/demo type checking, installed npm tarball checks for CJS, ESM, types, SSR and DOM interactions, and a React 16.8–19 CI compatibility matrix.
+
+### Fixed
+
+- Keep numeric state, formatted text, custom controls and accessibility attributes synchronized when values, bounds, locale or precision change.
+- Avoid rescaling existing numeric state on blur after a precision change.
+- Parse Han decimal and supplementary-plane digits and preserve localized caret positions.
+- Preserve amounts when editing numeric prefixes or suffixes.
+- Enforce `readOnly` for built-in and custom controls.
+- Avoid decimal stepping accumulation within JavaScript's safe integer range.
+- Supply actual input elements and consistent event methods in programmatic change callbacks.
+- Build artifacts during `prepack` and validate the package before publication.
+- Correct README examples, Node.js requirements and the demo's currency hint and accessible input names.
+
+### Changed
+
+- Extract pure numeric helpers while retaining public callback signatures, scaled step units, implied-decimal string values, zero-on-clear behavior and existing element layout.
+- Use `gh-pages` 6.1.1 to avoid the development-only `braces` vulnerability in the newer dependency chain; the demo deployment command is unchanged.
+
 ## [0.8.7] - 2026-10-01
 
 ### Fixed

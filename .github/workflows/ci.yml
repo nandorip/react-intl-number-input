@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+  react-compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        react: ['16.8.0', '17.0.2', '18.3.1', '19.3.0']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build:lib
+      - run: npm install --no-save --package-lock=false --legacy-peer-deps react@${{ matrix.react }} react-dom@${{ matrix.react }}
+      - run: npm run check:package
