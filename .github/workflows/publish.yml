@@ -34,6 +34,7 @@ jobs:
         run: npm run check
 
       - name: Publish to npm with provenance
-        run: npm publish --provenance --access public --tag ${{ github.event.inputs.tag || 'latest' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TAG: ${{ github.event.inputs.tag || 'latest' }}
+        run: npm publish --provenance --access public --tag "$NPM_TAG"

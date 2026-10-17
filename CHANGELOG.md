@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extract pure numeric helpers while retaining public callback signatures, scaled step units, implied-decimal string values, zero-on-clear behavior and existing element layout.
 - Use `gh-pages` 6.1.1 to avoid the development-only `braces` vulnerability in the newer dependency chain; the demo deployment command is unchanged.
+- Add `npm run release` and a GitHub Actions workflow that publishes with provenance.
 
 ## [0.8.7] - 2026-10-01
 
