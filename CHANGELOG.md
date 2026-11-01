@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Keep custom controls synchronized with input state when operating in controlled mode.
+- Pass optional OTP argument securely to npm publish during release.
+
+### Documentation
+
+- Document publication workflow via GitHub Actions with provenance and local CLI release script.
+
 ## [0.9.0] - 2026-10-13
 
 ### Added
