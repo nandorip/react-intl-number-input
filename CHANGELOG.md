@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-11-06
+
 ### Fixed
 
 - Keep custom controls synchronized with input state when operating in controlled mode.
@@ -184,7 +186,9 @@ This is a maintainer/toolchain release. The published component API, peer depend
 
 See [git history](https://github.com/nandorip/react-intl-number-input/commits/master) for changes prior to 0.6.0.
 
-[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/nandorip/react-intl-number-input/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/nandorip/react-intl-number-input/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.2...v0.9.0
 [0.8.2]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/nandorip/react-intl-number-input/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/nandorip/react-intl-number-input/compare/v0.7.0...v0.8.0
