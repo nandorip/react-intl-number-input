@@ -34,27 +34,36 @@ function DemoCard({
     setMaskedValue(nextMaskedValue);
   };
 
+  const headingId = `heading-${title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
+  const fieldClass = [
+    'demo-field',
+    inputProps?.renderControls ? 'with-custom' : '',
+    renderExtra ? 'ref-row' : '',
+  ].filter(Boolean).join(' ');
+
   return (
     <article className="demo-card">
-      <h2 id={`heading-${title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`}>{title}</h2>
-      <p>{description}</p>
-      {hint ? <p>{hint}</p> : null}
-      <IntlNumberInput
-        ref={inputRef}
-        controlled
-        aria-labelledby={`heading-${title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`}
-        className="demo-input"
-        value={value}
-        onChange={handleChange}
-        {...inputProps}
-      />
-      {renderExtra ? renderExtra(inputRef) : null}
-      <div className="demo-output">
-        value
-        <span>{value}</span>
-        maskedValue
-        <span>{maskedValue ?? '—'}</span>
+      <h2 id={headingId}>{title}</h2>
+      <p className="desc">{description}</p>
+      {hint ? <p className="hint">{hint}</p> : null}
+      <div className={fieldClass}>
+        <IntlNumberInput
+          ref={inputRef}
+          controlled
+          aria-labelledby={headingId}
+          className="demo-input"
+          value={value}
+          onChange={handleChange}
+          {...inputProps}
+        />
+        {renderExtra ? renderExtra(inputRef) : null}
       </div>
+      <dl className="readout">
+        <dt>value</dt>
+        <dd>{value}</dd>
+        <dt>maskedValue</dt>
+        <dd>{maskedValue ?? '—'}</dd>
+      </dl>
     </article>
   );
 }
@@ -125,13 +134,12 @@ const EXAMPLES: DemoCardProps[] = [
       maxValue: 100,
       step: 1,
       precision: 2,
-      renderControls: ({ increment, decrement, formattedValue, disabled, readOnly }) => (
+      renderControls: ({ increment, decrement, disabled, readOnly }) => (
         <div className="demo-controls">
-          <button type="button" aria-label="Decrease amount" onClick={() => decrement()} disabled={disabled || readOnly}>
+          <button type="button" className="round-btn" aria-label="Decrease amount" onClick={() => decrement()} disabled={disabled || readOnly}>
             −
           </button>
-          <span>{formattedValue}</span>
-          <button type="button" aria-label="Increase amount" onClick={() => increment()} disabled={disabled || readOnly}>
+          <button type="button" className="round-btn round-btn-plus" aria-label="Increase amount" onClick={() => increment()} disabled={disabled || readOnly}>
             +
           </button>
         </div>
@@ -146,12 +154,7 @@ const EXAMPLES: DemoCardProps[] = [
     initialMasked: '100.00',
     inputProps: { id: 'ref-example' },
     renderExtra: (inputRef: React.RefObject<HTMLInputElement | null>) => (
-      <button
-        type="button"
-        className="demo-button"
-        onClick={() => inputRef.current?.focus()}
-        style={{ marginTop: '8px', width: '100%' }}
-      >
+      <button type="button" className="focus-btn" onClick={() => inputRef.current?.focus()}>
         Focus Input
       </button>
     ),
@@ -162,41 +165,14 @@ function App() {
   return (
     <div className="demo">
       <header className="demo-header">
+        <p className="install">npm i react-intl-number-input</p>
         <h1>react-intl-number-input</h1>
-        <p>
-          Masked number input with locale-aware formatting via{' '}
-          <code>Intl.NumberFormat</code>.
+        <p className="demo-lead">
+          <strong>How to type:</strong> enter digits only — the decimal separator
+          is implied by <code>precision</code>. For <code>precision={'{2}'}</code>,
+          typing 1250 becomes 12.50.
         </p>
-        <div className="demo-links">
-          <a
-            href="https://github.com/nandorip/react-intl-number-input"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://www.npmjs.com/package/react-intl-number-input"
-            target="_blank"
-            rel="noreferrer"
-          >
-            npm
-          </a>
-          <a
-            href="https://github.com/nandorip/react-intl-number-input#readme"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
       </header>
-
-      <p className="demo-tip">
-        <strong>How to type:</strong> enter digits only — the decimal separator
-        is implied by <code>precision</code>. For <code>precision={'{2}'}</code>,
-        typing <code>1250</code> becomes <code>12.50</code>.
-      </p>
 
       <main className="demo-grid">
         {EXAMPLES.map((example) => (
@@ -205,13 +181,17 @@ function App() {
       </main>
 
       <footer className="demo-footer">
-        MIT License ·{' '}
-        <a
-          href="https://github.com/nandorip/react-intl-number-input"
-          target="_blank"
-          rel="noreferrer"
-        >
-          nandorip/react-intl-number-input
+        v0.9.1 · MIT License ·{' '}
+        <a href="https://github.com/nandorip/react-intl-number-input" target="_blank" rel="noreferrer">
+          GitHub
+        </a>
+        {' · '}
+        <a href="https://www.npmjs.com/package/react-intl-number-input" target="_blank" rel="noreferrer">
+          npm
+        </a>
+        {' · '}
+        <a href="https://github.com/nandorip/react-intl-number-input#readme" target="_blank" rel="noreferrer">
+          Documentation
         </a>
       </footer>
     </div>

@@ -6,7 +6,10 @@
     <title>React Intl Number Input Demo | Locale-Aware React Component</title>
     <meta name="description" content="Try a React number input with locale-aware formatting, configurable precision, prefixes, suffixes, and value limits. See examples and install the package.">
     <meta name="robots" content="index,follow,max-image-preview:large">
-    <meta name="theme-color" content="#f4f6f8">
+    <meta name="theme-color" content="#22242a">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap">
     <link rel="canonical" href="https://nandorip.github.io/react-intl-number-input/">
     <link rel="sitemap" type="application/xml" href="https://nandorip.github.io/react-intl-number-input/sitemap.xml">
     <meta property="og:type" content="website">
@@ -28,218 +31,221 @@
             "codeRepository": "https://github.com/nandorip/react-intl-number-input",
             "programmingLanguage": "TypeScript",
             "runtimePlatform": "React",
-            "version": "0.9.0",
+            "version": "0.9.1",
             "license": "https://opensource.org/license/mit"
         }
     </script>
     <style>
         :root {
-            color-scheme: light dark;
-            --bg: #f4f6f8;
-            --surface: #ffffff;
-            --text: #1a1f36;
-            --muted: #5c6370;
-            --border: #e2e8f0;
-            --accent: #3b5bdb;
-            --accent-soft: #edf2ff;
-            --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+            color-scheme: dark;
+            --background: oklch(16% 0.01 250);
+            --foreground: oklch(95% 0.01 90);
+            --card: oklch(20% 0.012 250);
+            --primary: oklch(86% 0.17 128);
+            --primary-foreground: oklch(18% 0.02 250);
+            --secondary: oklch(26% 0.012 250);
+            --muted: oklch(26% 0.012 250);
+            --muted-foreground: oklch(68% 0.015 250);
+            --border: oklch(30% 0.012 250);
+            --input: oklch(32% 0.012 250);
+            --ring: oklch(86% 0.17 128);
+            --radius: 0.75rem;
+            --font-sans: "DM Sans", sans-serif;
+            --font-display: "Space Grotesk", sans-serif;
+            --font-mono: "JetBrains Mono", ui-monospace, monospace;
         }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0f1419;
-                --surface: #1a2332;
-                --text: #e8edf5;
-                --muted: #9aa5b5;
-                --border: #2d3a4d;
-                --accent: #748ffc;
-                --accent-soft: #1e2a44;
-                --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-            }
-        }
-
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: var(--font-sans);
+            background: var(--background);
+            color: var(--foreground);
             line-height: 1.5;
         }
 
         .demo {
-            max-width: 960px;
+            max-width: 64rem;
             margin: 0 auto;
-            padding: 2.5rem 1.25rem 3rem;
+            padding: 4rem 1.5rem;
         }
 
-        .demo-header {
-            margin-bottom: 2rem;
+        .install {
+            margin: 0;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--primary);
         }
 
         .demo-header h1 {
-            margin: 0 0 0.5rem;
-            font-size: 1.75rem;
-            letter-spacing: -0.02em;
+            margin: 0.75rem 0 0;
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 3.75rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.03em;
         }
 
-        .demo-header p {
-            margin: 0;
-            color: var(--muted);
-            max-width: 52ch;
+        .demo-lead {
+            margin: 1rem 0 0;
+            max-width: 42rem;
+            color: var(--muted-foreground);
         }
 
-        .demo-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
+        .demo-lead strong { color: var(--foreground); }
 
-        .demo-links a {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .demo-links a:hover {
-            text-decoration: underline;
-        }
-
-        .demo-tip {
-            margin: 1.5rem 0 2rem;
-            padding: 0.9rem 1rem;
-            background: var(--accent-soft);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.92rem;
-            color: var(--muted);
-        }
-
-        .demo-tip strong {
-            color: var(--text);
+        .demo-lead code {
+            font-family: var(--font-mono);
+            color: var(--primary);
         }
 
         .demo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-top: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            .demo-grid { grid-template-columns: 1fr 1fr; }
         }
 
         .demo-card {
-            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.1rem 1.15rem 1.2rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
+            border-radius: calc(var(--radius) + 4px);
+            background: var(--card);
+            padding: 1.5rem;
+            transition: border-color 0.15s ease;
         }
+
+        .demo-card:hover { border-color: color-mix(in oklab, var(--primary) 50%, transparent); }
 
         .demo-card h2 {
             margin: 0;
-            font-size: 1rem;
-            font-weight: 600;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 500;
         }
 
-        .demo-card p {
-            margin: 0;
-            font-size: 0.88rem;
-            color: var(--muted);
+        .demo-card .desc {
+            margin: 0.25rem 0 0;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
         }
 
-        .demo-card .demo-input {
+        .demo-card .hint {
+            margin: 0.75rem 0 0;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+
+        .demo-field { margin-top: 1rem; }
+
+        .demo-input {
             width: 100%;
-            max-width: 100%;
-            padding: 0.55rem 0.7rem;
-            font-size: 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg);
-            color: var(--text);
+            border: 1px solid var(--input);
+            border-radius: var(--radius);
+            background: var(--background);
+            padding: 0.75rem 1rem;
+            text-align: right;
+            font-family: var(--font-mono);
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            color: var(--foreground);
         }
 
-        .demo-card .demo-input:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 1px;
+        .demo-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 30%, transparent);
         }
 
-        .demo-card .demo-input:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-        }
-
-        .demo-controls {
+        .demo-field > div {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             gap: 0.5rem;
+            width: 100%;
         }
 
-        .demo-controls button {
-            padding: 0.35rem 0.65rem;
-            font-size: 0.9rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg);
-            color: var(--text);
+        .demo-field > div > .demo-input { flex: 1; width: auto; }
+
+        .demo-field > div > button {
+            width: 3rem;
+            border: 1px solid var(--input);
+            border-radius: var(--radius);
+            background: var(--secondary);
+            color: var(--foreground);
+            font-family: var(--font-mono);
+            font-size: 1.125rem;
             cursor: pointer;
         }
 
-        .demo-controls button:hover:not(:disabled) {
-            border-color: var(--accent);
-            color: var(--accent);
+        .demo-field > div > button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .demo-field.with-custom { display: flex; align-items: center; gap: 0.5rem; }
+        .demo-field.with-custom .demo-controls { display: contents; }
+        .demo-field.with-custom .demo-input { order: 1; flex: 1; }
+        .round-btn { order: 0; }
+        .round-btn-plus { order: 2; }
+
+        .round-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border: 0;
+            border-radius: 999px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
         }
 
-        .demo-controls button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .round-btn:hover:not(:disabled) { opacity: 0.9; }
+        .round-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .ref-row { display: flex; gap: 0.75rem; align-items: center; }
+        .ref-row .demo-input { flex: 1; }
+
+        .focus-btn {
+            flex-shrink: 0;
+            border: 0;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            padding: 0.75rem 1rem;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            cursor: pointer;
         }
 
-        .demo-controls span {
-            flex: 1;
-            font-size: 0.88rem;
-            color: var(--muted);
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        .focus-btn:hover { opacity: 0.9; }
+
+        .readout {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.25rem 1rem;
+            margin: 1rem 0 0;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            background: var(--muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
         }
 
-        .demo-output {
-            margin-top: auto;
-            padding-top: 0.65rem;
-            border-top: 1px dashed var(--border);
-            font-size: 0.82rem;
-            color: var(--muted);
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        }
-
-        .demo-output span {
-            display: block;
-            margin-top: 0.15rem;
-            color: var(--text);
-            word-break: break-all;
-        }
+        .readout dt { margin: 0; color: var(--muted-foreground); }
+        .readout dd { margin: 0; color: var(--primary); word-break: break-all; }
 
         .demo-footer {
-            margin-top: 2.5rem;
-            padding-top: 1.25rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.85rem;
-            color: var(--muted);
-            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
         }
 
-        .demo-footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .demo-footer a:hover {
-            text-decoration: underline;
-        }
+        .demo-footer a { color: var(--primary); text-decoration: none; }
+        .demo-footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -247,14 +253,10 @@
     <div id="root">
         <main class="demo">
             <header class="demo-header">
-                <h1>React Intl Number Input</h1>
-                <p>A React number input with locale-aware formatting, adjustable precision, prefixes, suffixes, and min/max limits.</p>
-                <div class="demo-links">
-                    <a href="https://github.com/nandorip/react-intl-number-input">Source code</a>
-                    <a href="https://www.npmjs.com/package/react-intl-number-input">Install from npm</a>
-                </div>
+                <p class="install">npm i react-intl-number-input</p>
+                <h1>react-intl-number-input</h1>
+                <p class="demo-lead"><strong>How to type:</strong> enter digits only — the decimal separator is implied by <code>precision</code>. For <code>precision={2}</code>, typing 1250 becomes 12.50.</p>
             </header>
-            <p class="demo-tip">The interactive examples are loading. The component formats numbers with <code>Intl.NumberFormat</code> and supports React 16.8 and newer.</p>
         </main>
     </div>
     <script src="./bundle.js"></script>
