@@ -99,7 +99,7 @@ This repository includes an automated workflow ([`.github/workflows/publish.yml`
 
 ### Method 2: Local CLI Release (`npm run release`)
 
-A release helper script is available to validate requirements, run the test suite, and publish:
+A release helper script ([scripts/release.mjs](scripts/release.mjs)) is available to validate requirements, run the test suite, publish to npm, and create/push git tags automatically:
 
 1. **Verify login:**
    ```bash
@@ -121,6 +121,7 @@ A release helper script is available to validate requirements, run the test suit
 
 The script automatically:
 - Confirms the active npm user.
+- Verifies that the target version is not already published on npm.
 - Runs `npm run check` (Jest tests, TypeScript, library builds, tarball verification).
 - Runs `npm publish`.
 - Creates and pushes the git tag `v<version>`.

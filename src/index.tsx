@@ -146,8 +146,8 @@ const IntlNumberInput = forwardRef<HTMLInputElement, IntlNumberInputProps>(
       if (disabled || readOnly || !Number.isFinite(next)) return;
       const nextValue = normalize(next);
       const nextMasked = formatNumber(nextValue);
+      numericValueRef.current = nextValue;
       if (!controlled) {
-        numericValueRef.current = nextValue;
         setState((previous) => ({ ...previous, numeric: nextValue }));
       }
       // Reapply the caret even if normalization leaves the formatted value unchanged.

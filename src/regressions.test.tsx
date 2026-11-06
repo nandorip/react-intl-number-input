@@ -202,6 +202,19 @@ test('several control calls in a single event accumulate without stale state', (
   expect(input()).toHaveValue('0.02');
 });
 
+test('controlled controls accumulate proposals within one event and reset after rejection', () => {
+  const onChange = jest.fn();
+  render(<IntlNumberInput controlled value={1} onChange={onChange}
+    renderControls={({ increment }) =>
+      <button onClick={() => { increment(); increment(); }}>Twice</button>} />);
+  fireEvent.click(screen.getByText('Twice'));
+  expect(onChange.mock.calls.map((call) => call[1])).toEqual([1.01, 1.02]);
+  expect(input()).toHaveValue('1.00');
+  fireEvent.click(screen.getByText('Twice'));
+  expect(onChange.mock.calls.map((call) => call[1])).toEqual([1.01, 1.02, 1.01, 1.02]);
+  expect(input()).toHaveValue('1.00');
+});
+
 test('invalid bounds and multipliers do not poison numeric state', () => {
   render(<IntlNumberInput minValue={NaN} maxValue={Infinity}
     renderControls={({ increment }) => <button onClick={() => increment(Infinity)}>Invalid</button>} />);

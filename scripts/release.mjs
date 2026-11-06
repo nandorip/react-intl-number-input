@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -46,11 +46,21 @@ run('npm run check');
 
 // 4. Publicar no npm
 const otpArg = process.argv.find((arg) => arg.startsWith('--otp=')) || '';
-const publishCmd = `npm publish ${otpArg}`.trim();
+const otp = otpArg.slice('--otp='.length);
+if (otpArg && !/^\d{6,8}$/.test(otp)) {
+  console.error('❌ OTP inválido: informe um código numérico de 6 a 8 dígitos.');
+  process.exit(1);
+}
+const publishArgs = ['publish', ...(otpArg ? [`--otp=${otp}`] : [])];
+const npmCli = process.env.npm_execpath;
+if (!npmCli) {
+  console.error('❌ Execute este script com `npm run release`.');
+  process.exit(1);
+}
 
-console.log(`\n🚀 Executando: ${publishCmd}`);
+console.log(`\n🚀 Executando: npm publish${otpArg ? ' --otp=<oculto>' : ''}`);
 try {
-  run(publishCmd);
+  execFileSync(process.execPath, [npmCli, ...publishArgs], { cwd: root, stdio: 'inherit' });
   console.log(`\n✅ react-intl-number-input@${version} publicado com sucesso no npm!`);
 } catch (error) {
   console.error('\n❌ Falha na publicação. Se for erro de 2FA/EOTP, forneça o código: `npm run release -- --otp=123456`');
